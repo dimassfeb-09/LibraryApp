@@ -7,6 +7,8 @@ class TextFieldCustom extends StatelessWidget {
   final String hintText;
   final bool secureText;
   final InputType type;
+  final TextEditingController controller;
+  void Function(String value)? onChanged;
 
   Map<InputType, TextInputType> selectedType = {
     InputType.text: TextInputType.text,
@@ -16,10 +18,12 @@ class TextFieldCustom extends StatelessWidget {
 
   TextFieldCustom({
     super.key,
-    required this.title,
+    this.title = '',
     required this.hintText,
-    this.secureText = false,
+    required this.onChanged,
+    required this.controller,
     this.type = InputType.text,
+    this.secureText = false,
   });
 
   @override
@@ -28,9 +32,10 @@ class TextFieldCustom extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title),
-          const SizedBox(height: 6),
+          title != '' ? Column(children: [Text(title), const SizedBox(height: 6)]) : const SizedBox(),
           TextField(
+            controller: controller,
+            onChanged: onChanged,
             keyboardType: selectedType[type],
             obscureText: secureText,
             decoration: InputDecoration(

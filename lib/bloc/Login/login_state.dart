@@ -1,16 +1,24 @@
 part of 'login_bloc.dart';
 
 class LoginState {
-  final bool isRememberMe;
+  final String email;
+  final String password;
+  final String errorMsg;
 
-  LoginState({this.isRememberMe = false});
+  LoginState({this.email = '', this.password = '', this.errorMsg = ''});
 
-  LoginState copyWith({bool? isRememberMe}) {
-    return LoginState(isRememberMe: isRememberMe ?? this.isRememberMe);
+  LoginState copyWith({String? email, String? password, String? errorMsg}) {
+    return LoginState(
+      email: email ?? this.email,
+      password: password ?? this.password,
+      errorMsg: errorMsg ?? this.errorMsg,
+    );
   }
 }
 
-class RememberMeCheckboxState extends LoginState {
-  final bool isRememberMe;
-  RememberMeCheckboxState({required this.isRememberMe}) : super(isRememberMe: isRememberMe);
+class LoginSuccessed extends LoginState {}
+
+class LoginFailed extends LoginState {
+  final String errorMsg;
+  LoginFailed({required this.errorMsg}) : super(errorMsg: errorMsg);
 }
