@@ -13,6 +13,7 @@ class BookRepository {
 
       final result =
           await documentReference.get().then((value) => value.data()?["path_books"]).catchError((e) => throw e);
+
       for (DocumentReference<Map<String, dynamic>> value in result) {
         DocumentSnapshot<Map<String, dynamic>> book = await value.get();
         Map<String, dynamic> detailBook = {"id": book.id}..addAll(book.data()!);
@@ -21,7 +22,6 @@ class BookRepository {
 
       return books;
     } catch (e) {
-      print(e);
       throw e;
     }
   }
@@ -46,10 +46,34 @@ class BookRepository {
     }
   }
 
+  Future<List<Books>?> getNewBooks() async {
+    final documentReference = collectionReference.doc("news");
+    try {
+      List<Books>? books = [];
+
+      final result =
+          await documentReference.get().then((value) => value.data()?["path_books"]).catchError((e) => throw e);
+      for (DocumentReference<Map<String, dynamic>> value in result) {
+        DocumentSnapshot<Map<String, dynamic>> book = await value.get();
+        Map<String, dynamic> detailBook = {"id": book.id}..addAll(book.data()!);
+        books.add(Books.fromJson(detailBook));
+      }
+
+      return books;
+    } catch (e) {
+      print(e);
+      throw e;
+    }
+  }
+
   Future<Books> getDetailBook({required String id}) async {
     try {
       Books books = Books();
-      books = Books.fromJson(await collectionReference.doc(id).get().then((value) => value.data()!));
+      final data = await collectionReference.doc(id).get().then((value) => value.data());
+      if (data != null) {
+        Map<String, dynamic> detailBook = {"id": id}..addAll(data);
+        books = Books.fromJson(detailBook);
+      }
 
       return books;
     } catch (e) {

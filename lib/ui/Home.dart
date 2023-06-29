@@ -1,113 +1,117 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:library_app/components/app_bar.dart';
+import 'package:library_app/components/loading.dart';
+import 'package:library_app/ui/Checkout.dart';
 import 'package:library_app/ui/DetailBook.dart';
 import 'package:library_app/ui/Search.dart';
 
 import '../bloc/Book/book_bloc.dart';
+import '../bloc/Checkout/checkout_bloc.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+  HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+
+    User? currentUser = firebaseAuth.currentUser;
+    if (currentUser == null) {
+      firebaseAuth.signOut();
+      Navigator.of(context).pushNamedAndRemoveUntil('/login', (route) => false);
+    }
+
     return Scaffold(
       appBar: AppBar(
-        title: const AppBarTitleCustom(title: "Home"),
+        title: const AppBarTitleCustom(title: "Utama"),
         centerTitle: true,
-        actions: [
-          IconButton(
-            onPressed: () => Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) {
-                return BlocProvider(
-                  create: (context) => BookBloc()..add(GetBooksHomeEvent()),
-                  child: const SearchPage(),
-                );
-              },
-            )),
-            icon: const Icon(Icons.search),
-          )
-        ],
+        actions: const [_IconButtonActionHome()],
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _CardCarouselSlider(),
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-              child: Text("Sedang trend", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
-            ),
-            BlocBuilder<BookBloc, BookState>(buildWhen: (previous, current) {
-              if (current is GetBooksTrendSuccessedState) {
-                return true;
-              } else if (current is GetBooksTrendLoadingState) {
-                return false;
-              }
-              return false;
-            }, builder: (context, state) {
-              return SizedBox(
-                height: 195,
-                width: double.infinity,
-                child: ListView.builder(
-                  padding: EdgeInsets.symmetric(horizontal: 10),
-                  shrinkWrap: false,
-                  // physics: NeverScrollableScrollPhysics(),
-                  itemCount: state.trendBooks.length,
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (context, index) => GestureDetector(
-                    onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => BlocProvider(
-                          create: (context) => BookBloc()..add(GetDetailBookEvent(id: state.trendBooks[index].id)),
-                          child: DetailBookPage(),
-                        ),
-                      ),
-                    ),
-                    child: Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 10),
-                      height: 195,
-                      width: 132,
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                            image: CachedNetworkImageProvider(state.trendBooks[index].imagePath), fit: BoxFit.cover),
-                        color: Colors.grey.withOpacity(0.25),
-                        borderRadius: BorderRadius.circular(7.76),
-                      ),
-                    ),
+      body: BlocBuilder<BookBloc, BookState>(
+        bloc: context.read<BookBloc>(),
+        builder: (context, state) {
+          if (state is GetBooksLoadingState) {
+            return loadingCircularProgressIndicator();
+          } else if (state is GetBooksSuccessedState) {
+            return SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const _CardSliderRecommendation(),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                    child: Text("Sedang trend", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
                   ),
-                ),
-              );
-            }),
-          ],
-        ),
+                  _CardSliderTrends(),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                    child: Text("Buku baru", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                  ),
+                  _CardSliderNewBooks(),
+                  SizedBox(height: 20),
+                ],
+              ),
+            );
+          }
+          return SizedBox();
+        },
       ),
     );
   }
 }
 
-class _CardCarouselSlider extends StatelessWidget {
-  const _CardCarouselSlider({
-    super.key,
-  });
+class _IconButtonActionHome extends StatelessWidget {
+  const _IconButtonActionHome({super.key});
 
   @override
   Widget build(BuildContext context) {
-    int _currentIndex = 0;
-    return BlocBuilder<BookBloc, BookState>(
-      bloc: context.read<BookBloc>(),
-      buildWhen: (previous, current) {
-        if (current is GetBooksRecommendationSuccessedState) {
-          return true;
-        }
+    FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+    User? currentUser = firebaseAuth.currentUser;
 
-        return false;
-      },
-      builder: (context, state) {
-        return CarouselSlider(
+    return Row(
+      children: [
+        IconButton(
+          onPressed: () => Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) {
+              return BlocProvider(
+                create: (context) => BookBloc()..add(GetBooksHomeEvent()),
+                child: const SearchPage(),
+              );
+            },
+          )),
+          icon: const Icon(Icons.search),
+        ),
+        IconButton(
+          onPressed: () => Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) {
+              return BlocProvider(
+                create: (context) => CheckoutBloc()..add(GetCheckoutUserEvent(userID: currentUser?.uid)),
+                child: const CheckoutPage(),
+              );
+            },
+          )),
+          icon: const Icon(Icons.shopping_cart),
+        ),
+      ],
+    );
+  }
+}
+
+class _CardSliderRecommendation extends StatelessWidget {
+  const _CardSliderRecommendation({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    BookBloc bookBloc = context.read<BookBloc>();
+    FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+
+    return Column(
+      children: [
+        CarouselSlider(
           options: CarouselOptions(
             height: 300,
             aspectRatio: 170 / 250,
@@ -115,18 +119,23 @@ class _CardCarouselSlider extends StatelessWidget {
             enlargeStrategy: CenterPageEnlargeStrategy.zoom,
             initialPage: 3,
             viewportFraction: 0.5,
-            onPageChanged: (index, reason) {
-              _currentIndex = index;
-            },
           ),
-          items: state.recommendationBooks.map((book) {
+          items: bookBloc.state.recommendationBooks.map((book) {
             return GestureDetector(
               onTap: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => BlocProvider(
-                      create: (context) => BookBloc()..add(GetDetailBookEvent(id: book.id)),
+                    builder: (context) => MultiBlocProvider(
+                      providers: [
+                        BlocProvider(
+                          create: (context) => BookBloc()..add(GetDetailBookEvent(id: book.id)),
+                        ),
+                        BlocProvider(
+                          create: (context) => CheckoutBloc()
+                            ..add(GetCheckoutBookByUserIDEvent(userID: firebaseAuth.currentUser!.uid, bookID: book.id)),
+                        ),
+                      ],
                       child: DetailBookPage(),
                     ),
                   ),
@@ -143,15 +152,123 @@ class _CardCarouselSlider extends StatelessWidget {
                     BoxShadow(
                       offset: const Offset(0, 1),
                       blurRadius: 10,
-                      color: Colors.black.withOpacity(0.2),
+                      color: Colors.grey.withOpacity(0.25),
                     ),
                   ],
                 ),
               ),
             );
           }).toList(),
-        );
-      },
+        ),
+      ],
+    );
+  }
+}
+
+class _CardSliderTrends extends StatelessWidget {
+  _CardSliderTrends({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+
+    BookBloc bookBloc = context.read<BookBloc>();
+    return Container(
+      height: 195,
+      width: double.infinity,
+      margin: EdgeInsets.symmetric(vertical: 10),
+      child: ListView.builder(
+        padding: EdgeInsets.symmetric(horizontal: 10),
+        shrinkWrap: false,
+        // physics: NeverScrollableScrollPhysics(),
+        itemCount: bookBloc.state.trendBooks.length,
+        scrollDirection: Axis.horizontal,
+        itemBuilder: (context, index) => GestureDetector(
+          onTap: () => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => MultiBlocProvider(
+                providers: [
+                  BlocProvider(
+                    create: (context) => BookBloc()..add(GetDetailBookEvent(id: bookBloc.state.trendBooks[index].id)),
+                  ),
+                  BlocProvider(
+                    create: (context) => CheckoutBloc()
+                      ..add(GetCheckoutBookByUserIDEvent(
+                          userID: firebaseAuth.currentUser!.uid, bookID: bookBloc.state.trendBooks[index].id)),
+                  ),
+                ],
+                child: DetailBookPage(),
+              ),
+            ),
+          ),
+          child: Container(
+            margin: const EdgeInsets.symmetric(horizontal: 10),
+            height: 195,
+            width: 132,
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                  image: CachedNetworkImageProvider(bookBloc.state.trendBooks[index].imagePath), fit: BoxFit.cover),
+              color: Colors.grey.withOpacity(0.25),
+              borderRadius: BorderRadius.circular(7.76),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _CardSliderNewBooks extends StatelessWidget {
+  _CardSliderNewBooks({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+
+    BookBloc bookBloc = context.read<BookBloc>();
+    return Container(
+      height: 195,
+      width: double.infinity,
+      margin: EdgeInsets.symmetric(vertical: 10),
+      child: ListView.builder(
+        padding: EdgeInsets.symmetric(horizontal: 10),
+        shrinkWrap: false,
+        // physics: NeverScrollableScrollPhysics(),
+        itemCount: bookBloc.state.newBooks.length,
+        scrollDirection: Axis.horizontal,
+        itemBuilder: (context, index) => GestureDetector(
+          onTap: () => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => MultiBlocProvider(
+                providers: [
+                  BlocProvider(
+                    create: (context) => BookBloc()..add(GetDetailBookEvent(id: bookBloc.state.newBooks[index].id)),
+                  ),
+                  BlocProvider(
+                    create: (context) => CheckoutBloc()
+                      ..add(GetCheckoutBookByUserIDEvent(
+                          userID: firebaseAuth.currentUser!.uid, bookID: bookBloc.state.newBooks[index].id)),
+                  ),
+                ],
+                child: DetailBookPage(),
+              ),
+            ),
+          ),
+          child: Container(
+            margin: const EdgeInsets.symmetric(horizontal: 10),
+            height: 195,
+            width: 132,
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                  image: CachedNetworkImageProvider(bookBloc.state.newBooks[index].imagePath), fit: BoxFit.cover),
+              color: Colors.grey.withOpacity(0.25),
+              borderRadius: BorderRadius.circular(7.76),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

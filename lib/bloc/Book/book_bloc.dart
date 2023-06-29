@@ -16,14 +16,16 @@ class BookBloc extends Bloc<BookEvent, BookState> {
     try {
       BookRepository bookRepository = BookRepository();
 
-      emit(GetBooksRecommendationLoadingState());
-      emit(GetBooksTrendLoadingState());
+      emit(GetBooksLoadingState());
 
       final recommendationBooks = await bookRepository.getRecommendations();
       final trendBooks = await bookRepository.getTrends();
+      final newBooks = await bookRepository.getNewBooks();
 
-      emit(GetBooksRecommendationSuccessedState(recommendationBooks: recommendationBooks!));
-      emit(GetBooksTrendSuccessedState(trendBooks: trendBooks!));
+      if (trendBooks != null && recommendationBooks != null && newBooks != null) {
+        emit(GetBooksSuccessedState()
+            .copyWith(trendBooks: trendBooks, recommendationBooks: recommendationBooks, newBooks: newBooks));
+      }
     } catch (e) {
       print(e);
     }

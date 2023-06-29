@@ -1,9 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:library_app/bloc/Book/book_bloc.dart';
+import 'package:library_app/components/loading.dart';
 import 'package:library_app/components/text_field.dart';
 
+import '../bloc/Checkout/checkout_bloc.dart';
 import '../components/app_bar.dart';
 import 'DetailBook.dart';
 
@@ -12,9 +15,11 @@ class SearchPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+
     return Scaffold(
       appBar: AppBar(
-        title: const AppBarTitleCustom(title: "Search"),
+        title: const AppBarTitleCustom(title: "Cari"),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
@@ -41,12 +46,9 @@ class SearchPage extends StatelessWidget {
                   BlocBuilder<BookBloc, BookState>(
                     bloc: context.read<BookBloc>(),
                     builder: (context, state) {
-                      if (state is GetBooksTrendLoadingState) {
-                        return const Padding(
-                          padding: EdgeInsets.only(top: 10),
-                          child: Center(child: CircularProgressIndicator()),
-                        );
-                      } else if (state is GetBooksTrendSuccessedState) {
+                      if (state is GetBooksLoadingState) {
+                        return loadingCircularProgressIndicator();
+                      } else if (state is GetBooksSuccessedState) {
                         return ListView.builder(
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
@@ -57,12 +59,21 @@ class SearchPage extends StatelessWidget {
                             child: GestureDetector(
                               onTap: () => Navigator.of(context).push(
                                 MaterialPageRoute(
-                                  builder: (context) => BlocProvider(
-                                      create: (context) => BookBloc()
-                                        ..add(
-                                          GetDetailBookEvent(id: state.trendBooks[index].id),
-                                        ),
-                                      child: const DetailBookPage()),
+                                  builder: (context) => MultiBlocProvider(
+                                    providers: [
+                                      BlocProvider(
+                                        create: (context) =>
+                                            BookBloc()..add(GetDetailBookEvent(id: state.trendBooks[index].id)),
+                                      ),
+                                      BlocProvider(
+                                        create: (context) => CheckoutBloc()
+                                          ..add(GetCheckoutBookByUserIDEvent(
+                                              userID: firebaseAuth.currentUser!.uid,
+                                              bookID: state.trendBooks[index].id)),
+                                      ),
+                                    ],
+                                    child: DetailBookPage(),
+                                  ),
                                 ),
                               ),
                               child: Container(
