@@ -20,6 +20,8 @@ class BookRepository {
         books.add(Books.fromJson(detailBook));
       }
 
+      books.removeWhere((element) => element.stock <= 0);
+
       return books;
     } catch (e) {
       throw e;
@@ -38,6 +40,8 @@ class BookRepository {
         Map<String, dynamic> detailBook = {"id": book.id}..addAll(book.data()!);
         books.add(Books.fromJson(detailBook));
       }
+
+      books.removeWhere((element) => element.stock <= 0);
 
       return books;
     } catch (e) {
@@ -58,6 +62,8 @@ class BookRepository {
         Map<String, dynamic> detailBook = {"id": book.id}..addAll(book.data()!);
         books.add(Books.fromJson(detailBook));
       }
+
+      books.removeWhere((element) => element.stock <= 0);
 
       return books;
     } catch (e) {

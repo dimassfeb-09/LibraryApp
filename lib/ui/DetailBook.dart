@@ -2,12 +2,14 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:library_app/bloc/Order/order_bloc.dart';
 import 'package:library_app/components/button.dart';
 import 'package:library_app/components/loading.dart';
 
 import '../bloc/Book/book_bloc.dart';
 import '../bloc/Checkout/checkout_bloc.dart';
 import '../components/app_bar.dart';
+import 'Order.dart';
 
 class DetailBookPage extends StatelessWidget {
   DetailBookPage({super.key});
@@ -142,11 +144,25 @@ class DetailBookPage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   // BORROW
-                  ButtonCustom(
-                    title: "BORROW",
-                    width: 165,
-                    height: 35,
-                    onTap: () {},
+                  Builder(
+                    builder: (context) {
+                      BookBloc bookBloc = context.read<BookBloc>();
+                      return ButtonCustom(
+                        title: "BORROW",
+                        width: 165,
+                        height: 35,
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => BlocProvider(
+                                create: (context) => OrderBloc()..add(AddOrderEvent(book: bookBloc.state.detailBook!)),
+                                child: const OrderPage(),
+                              ),
+                            ),
+                          );
+                        },
+                      );
+                    },
                   ),
                   const SizedBox(width: 12),
                   // ADD CHECKOUT

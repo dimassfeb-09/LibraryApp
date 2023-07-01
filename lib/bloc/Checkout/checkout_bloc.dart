@@ -18,6 +18,8 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
       CheckoutRepository checkoutRepository = CheckoutRepository();
       var checkouts = await checkoutRepository.getCheckoutUser(userID: userID!);
 
+      checkouts.sort((a, b) => b.book!.stock);
+
       emit(GetCheckoutUserSuccessedState().copyWith(checkouts: checkouts));
     });
 
