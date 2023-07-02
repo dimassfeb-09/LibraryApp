@@ -30,24 +30,22 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
     emit(state.copyWith(books: books));
   }
 
-  void _addOrderSubmittedEvent(
-      AddOrderSubmittedEvent event, Emitter emit) async {
-    OrderRepository orderRepository = OrderRepository();
+  void _addOrderSubmittedEvent(AddOrderSubmittedEvent event, Emitter emit) async {
+    emit(AddOrderCheckoutsLoadingState());
     try {
-      emit(AddOrderCheckoutsLoadingState());
+      OrderRepository orderRepository = OrderRepository();
+
       event.books.forEach((book) {
         if (book.stock <= 0) {
           throw "Stock ${book.title} kosong. Harap hapus dari keranjang.";
         }
       });
 
-      await orderRepository.orderBooks(
-          books: event.books, userID: event.userID);
+      await orderRepository.orderBooks(books: event.books, userID: event.userID);
 
       emit(AddOrderCheckoutsSuccessedState(books: event.books, errorMsg: ''));
     } catch (e) {
-      emit(AddOrderCheckoutsFailedState(
-          books: event.books, errorMsg: e.toString()));
+      emit(AddOrderCheckoutsFailedState(books: event.books, errorMsg: e.toString()));
     }
   }
 }

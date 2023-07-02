@@ -29,6 +29,12 @@ class HomePage extends StatelessWidget {
       appBar: AppBar(
         title: const AppBarTitleCustom(title: "Utama"),
         centerTitle: true,
+        leading: IconButton(
+          onPressed: () => Navigator.of(context).pushNamed(
+            '/profile',
+          ),
+          icon: const Icon(Icons.menu_rounded),
+        ),
         actions: const [_IconButtonActionHome()],
       ),
       body: BlocBuilder<BookBloc, BookState>(

@@ -23,6 +23,10 @@ class AddOrderCheckoutsLoadingState extends OrderState {}
 
 class AddOrderCheckoutsSuccessedState extends OrderState {
   AddOrderCheckoutsSuccessedState({super.books, super.errorMsg});
+
+  AddOrderCheckoutsSuccessedState copyWith({List<Books>? books, String? errorMsg}) {
+    return AddOrderCheckoutsSuccessedState(books: books ?? super.books, errorMsg: errorMsg ?? super.errorMsg);
+  }
 }
 
 class AddOrderCheckoutsFailedState extends OrderState {

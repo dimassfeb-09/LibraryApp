@@ -125,4 +125,28 @@ class CheckoutRepository {
       throw e;
     }
   }
+
+  Future<void> deleteAllCheckouts(String userID, List<Books> books) async {
+    try {
+      var querySnapshot = await collectionCheckoutRef.where("user_id", isEqualTo: collectionUserRef.doc(userID)).get();
+      if (books.isNotEmpty) {
+        var collectionBookReference = await collectionCheckoutRef.doc(querySnapshot.docs.first.id).collection("books");
+        await _deleteCheckoutByBookID(collectionBookReference, books);
+      }
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  Future<void> _deleteCheckoutByBookID(CollectionReference collectionBookReference, List<Books> books) async {
+    try {
+      books.forEach((book) async {
+        var collection =
+            await collectionBookReference.where("book_id", isEqualTo: collectionBookRef.doc(book.id)).get();
+        collection.docs.forEach((doc) {
+          collectionBookReference.doc(doc.id).delete();
+        });
+      });
+    } catch (e) {}
+  }
 }
