@@ -10,6 +10,7 @@ import '../bloc/Book/book_bloc.dart';
 import '../bloc/Checkout/checkout_bloc.dart';
 import '../bloc/Order/order_bloc.dart';
 import '../components/button.dart';
+
 import 'DetailBook.dart';
 import 'Order.dart';
 
@@ -27,9 +28,11 @@ class CheckoutPage extends StatelessWidget {
       ),
       body: BlocBuilder<CheckoutBloc, CheckoutState>(
         builder: (context, state) {
-          if (state is GetCheckoutUserLoadingState || state is DeleteCheckoutLoadingState) {
+          if (state is GetCheckoutUserLoadingState ||
+              state is DeleteCheckoutLoadingState) {
             return loadingCircularProgressIndicator();
-          } else if (state is GetCheckoutUserSuccessedState || state is DeleteCheckoutSuccessedState) {
+          } else if (state is GetCheckoutUserSuccessedState ||
+              state is DeleteCheckoutSuccessedState) {
             if (state.checkouts.isNotEmpty) {
               return SingleChildScrollView(
                 child: Column(
@@ -37,7 +40,8 @@ class CheckoutPage extends StatelessWidget {
                     const SizedBox(height: 20),
                     Builder(
                       builder: (context) {
-                        var isStockZero = state.checkouts.where((element) => element.book!.stock == 0);
+                        var isStockZero = state.checkouts
+                            .where((element) => element.book!.stock == 0);
                         if (isStockZero.isNotEmpty) {
                           return Container(
                             padding: const EdgeInsets.all(10),
@@ -51,8 +55,10 @@ class CheckoutPage extends StatelessWidget {
                                   "Terdapat ${isStockZero.length} buku dengan stok kosong.",
                                   style: const TextStyle(fontSize: 12),
                                 ),
-                                const Text("Buku otomatis tidak akan masuk ke dalam peminjaman.",
-                                    style: TextStyle(fontSize: 12))
+                                const Text(
+                                    "Buku otomatis tidak akan masuk ke dalam peminjaman.",
+                                    style: TextStyle(fontSize: 12)),
+                                const SizedBox(height: 20),
                               ],
                             ),
                           );
@@ -61,7 +67,6 @@ class CheckoutPage extends StatelessWidget {
                         return SizedBox();
                       },
                     ),
-                    const SizedBox(height: 20),
                     ListView.builder(
                       itemCount: state.checkouts.length,
                       scrollDirection: Axis.vertical,
@@ -76,14 +81,18 @@ class CheckoutPage extends StatelessWidget {
                                 builder: (context) => MultiBlocProvider(
                                   providers: [
                                     BlocProvider(
-                                      create: (context) =>
-                                          BookBloc()..add(GetDetailBookEvent(id: state.checkouts[index].book!.id)),
+                                      create: (context) => BookBloc()
+                                        ..add(GetDetailBookEvent(
+                                            id: state
+                                                .checkouts[index].book!.id)),
                                     ),
                                     BlocProvider(
                                       create: (context) => CheckoutBloc()
                                         ..add(GetCheckoutBookByUserIDEvent(
-                                            userID: firebaseAuth.currentUser!.uid,
-                                            bookID: state.checkouts[index].book!.id)),
+                                            userID:
+                                                firebaseAuth.currentUser!.uid,
+                                            bookID: state
+                                                .checkouts[index].book!.id)),
                                     ),
                                   ],
                                   child: DetailBookPage(),
@@ -92,7 +101,8 @@ class CheckoutPage extends StatelessWidget {
                             );
                           },
                           child: Container(
-                            margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 12.5),
+                            margin: const EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 12.5),
                             height: 116,
                             color: Colors.transparent,
                             child: Row(
@@ -102,7 +112,8 @@ class CheckoutPage extends StatelessWidget {
                                   width: 80,
                                   decoration: BoxDecoration(
                                     image: DecorationImage(
-                                        image: CachedNetworkImageProvider(state.checkouts[index].book!.imagePath),
+                                        image: CachedNetworkImageProvider(state
+                                            .checkouts[index].book!.imagePath),
                                         fit: BoxFit.cover),
                                     borderRadius: BorderRadius.circular(5),
                                     boxShadow: [
@@ -117,33 +128,54 @@ class CheckoutPage extends StatelessWidget {
                                 const SizedBox(width: 12),
                                 Expanded(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
                                           Text(
                                             state.checkouts[index].book!.title,
-                                            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                                            style: const TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w600),
                                             overflow: TextOverflow.clip,
                                           ),
-                                          Text(state.checkouts[index].book!.writer,
-                                              style: const TextStyle(fontSize: 12)),
+                                          Text(
+                                              state.checkouts[index].book!
+                                                  .writer,
+                                              style: const TextStyle(
+                                                  fontSize: 12)),
                                         ],
                                       ),
-                                      Text("Stok: ${state.checkouts[index].book!.stock}",
+                                      Text(
+                                          "Stok: ${state.checkouts[index].book!.stock}",
                                           style: TextStyle(
                                               fontSize: 12,
-                                              color:
-                                                  state.checkouts[index].book!.stock <= 0 ? Colors.red : Colors.black)),
+                                              color: state.checkouts[index]
+                                                          .book!.stock <=
+                                                      0
+                                                  ? Colors.red
+                                                  : Colors.black)),
                                       Builder(builder: (context) {
                                         return GestureDetector(
                                           onTap: () {
-                                            print(context.read<CheckoutBloc>().state.checkouts[index].id);
-                                            context.read<CheckoutBloc>().add(DeleteCheckoutEvent(
-                                                checkoutID: state.checkouts[index].id,
-                                                bookID: state.checkouts[index].book!.id));
+                                            print(context
+                                                .read<CheckoutBloc>()
+                                                .state
+                                                .checkouts[index]
+                                                .id);
+                                            context.read<CheckoutBloc>().add(
+                                                DeleteCheckoutEvent(
+                                                    checkoutID: state
+                                                        .checkouts[index].id,
+                                                    bookID: state
+                                                        .checkouts[index]
+                                                        .book!
+                                                        .id));
                                           },
                                           child: Icon(Icons.delete),
                                         );
@@ -170,7 +202,8 @@ class CheckoutPage extends StatelessWidget {
                     const SizedBox(height: 20),
                     const Text(
                       "Keranjang Kosong...",
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                     ),
                   ],
                 ),
@@ -208,7 +241,9 @@ class CheckoutPage extends StatelessWidget {
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) => BlocProvider(
-                          create: (context) => OrderBloc()..add(AddOrderCheckoutEvent(checkouts: state.checkouts)),
+                          create: (context) => OrderBloc()
+                            ..add(AddOrderCheckoutEvent(
+                                checkouts: state.checkouts)),
                           child: const OrderPage(),
                         ),
                       ),

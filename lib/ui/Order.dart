@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:library_app/components/app_bar.dart';
@@ -22,7 +23,8 @@ class OrderPage extends StatelessWidget {
           children: [
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 20, vertical: 25),
-              child: Text("Buku yang dipinjam", style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
+              child: Text("Buku yang dipinjam",
+                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -49,14 +51,18 @@ class OrderPage extends StatelessWidget {
                               children: [
                                 Text(
                                   state.books[index].title,
-                                  style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 20),
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 20),
                                   maxLines: 1,
                                   overflow: TextOverflow.clip,
                                 ),
                                 Text(
                                   state.books[index].writer,
                                   style: TextStyle(
-                                      fontWeight: FontWeight.w500, color: Colors.black.withOpacity(0.5), fontSize: 12),
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.black.withOpacity(0.5),
+                                      fontSize: 12),
                                 ),
                               ],
                             ),
@@ -82,12 +88,16 @@ class OrderPage extends StatelessWidget {
                 children: [
                   Text(
                     "Keterangan Peminjaman Buku",
-                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Colors.white),
+                    style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white),
                   ),
                   SizedBox(height: 20),
                   Text.rich(
                     TextSpan(
-                      text: """1. Hanya dapat meminjam satu buku dengan judul yang sama
+                      text:
+                          """1. Hanya dapat meminjam satu buku dengan judul yang sama
 2. Jadwal dan Lokasi pengambilan buku akan diinformasikan
 3. Jadwal dan Lokasi pengembalian buku akan diinformasikan
 4. Batas pengambilan buku h+3 setelah jadwal ditentukan
@@ -137,8 +147,12 @@ class OrderPage extends StatelessWidget {
                 width: 165,
                 height: 35,
                 onTap: () {
+                  FirebaseAuth firebaseAuth = FirebaseAuth.instance;
                   OrderBloc orderBloc = context.read<OrderBloc>();
-                  orderBloc.add(AddOrderSubmittedEvent(books: orderBloc.state.books));
+                  orderBloc.add(AddOrderSubmittedEvent(
+                    books: orderBloc.state.books,
+                    userID: firebaseAuth.currentUser!.uid,
+                  ));
                 },
               ),
             ),

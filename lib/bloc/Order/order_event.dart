@@ -14,5 +14,6 @@ class AddOrderCheckoutEvent extends OrderEvent {
 
 class AddOrderSubmittedEvent extends OrderEvent {
   final List<Books> books;
-  AddOrderSubmittedEvent({this.books = const []});
+  final String userID;
+  AddOrderSubmittedEvent({required this.books, required this.userID});
 }

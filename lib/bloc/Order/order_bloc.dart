@@ -30,7 +30,8 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
     emit(state.copyWith(books: books));
   }
 
-  void _addOrderSubmittedEvent(AddOrderSubmittedEvent event, Emitter emit) async {
+  void _addOrderSubmittedEvent(
+      AddOrderSubmittedEvent event, Emitter emit) async {
     OrderRepository orderRepository = OrderRepository();
     try {
       emit(AddOrderCheckoutsLoadingState());
@@ -40,9 +41,13 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
         }
       });
 
+      await orderRepository.orderBooks(
+          books: event.books, userID: event.userID);
+
       emit(AddOrderCheckoutsSuccessedState(books: event.books, errorMsg: ''));
     } catch (e) {
-      emit(AddOrderCheckoutsFailedState(books: event.books, errorMsg: e.toString()));
+      emit(AddOrderCheckoutsFailedState(
+          books: event.books, errorMsg: e.toString()));
     }
   }
 }
