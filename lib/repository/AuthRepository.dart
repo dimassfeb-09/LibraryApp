@@ -1,12 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:library_app/helpers/users.dart';
 
 class AuthRepository {
-  FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+  UsersHelper usersHelper = UsersHelper();
 
   Future<void> LoginAuth({required String email, required String password}) async {
     try {
-      await firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
+      var firebaseAuthInstance = usersHelper.firebaseAuthInstance();
+      await firebaseAuthInstance.signInWithEmailAndPassword(email: email, password: password);
     } on FirebaseAuthException catch (e) {
       throw e.message.toString();
     }
@@ -15,9 +17,12 @@ class AuthRepository {
   Future<void> RegisterAuth({required String name, required String email, required String password}) async {
     FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
     try {
-      String? uuid;
-      final userCredential = await firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
-      uuid = userCredential.user!.uid;
+      var firebaseAuthInstance = usersHelper.firebaseAuthInstance();
+
+      final userCredential =
+          await firebaseAuthInstance.createUserWithEmailAndPassword(email: email, password: password);
+      String? uuid = userCredential.user!.uid;
+      String? photoURL = userCredential.user!.photoURL;
 
       if (uuid.isNotEmpty) {
         firebaseFirestore
@@ -28,6 +33,7 @@ class AuthRepository {
                 "name": name,
                 "email": email.toLowerCase(),
                 "uuid": uuid,
+                "photo_url": photoURL,
               },
             )
             .then((value) {})
@@ -35,6 +41,15 @@ class AuthRepository {
               throw e.toString();
             });
       }
+    } on FirebaseAuthException catch (e) {
+      throw e.message.toString();
+    }
+  }
+
+  Future<void> logoutAuth() async {
+    try {
+      var firebaseAuthInstance = usersHelper.firebaseAuthInstance();
+      firebaseAuthInstance.signOut();
     } on FirebaseAuthException catch (e) {
       throw e.message.toString();
     }

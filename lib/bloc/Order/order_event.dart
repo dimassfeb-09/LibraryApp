@@ -17,3 +17,5 @@ class AddOrderSubmittedEvent extends OrderEvent {
   final String userID;
   AddOrderSubmittedEvent({required this.books, required this.userID});
 }
+
+class GetOrderUserEvent extends OrderEvent {}

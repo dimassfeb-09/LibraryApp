@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:library_app/repository/BookRepository.dart';
+import 'package:library_app/repository/UserRepository.dart';
 
 import '../models/Books.dart';
 import '../models/Checkouts.dart';
@@ -12,17 +13,27 @@ class CheckoutRepository {
   final collectionBookRef = firebaseFirestore.collection("books");
   BookRepository bookRepository = BookRepository();
 
-  Future<List<Checkouts>> getCheckoutUser({required String userID}) async {
+  Future<List<Checkouts>> getCheckoutUser() async {
     try {
       List<String>? booksID = [];
       List<Books> books;
-      String checkoutID;
+      String checkoutID = '';
       List<Checkouts>? checkouts = [];
 
-      var checkoutsCol = await collectionCheckoutRef.where("user_id", isEqualTo: collectionUserRef.doc(userID)).get();
-      checkoutID = checkoutsCol.docs.first.id;
+      UserRepository _userRepository = UserRepository();
+      var userInfo = await _userRepository.getDetailInfoUser();
+
+      var checkoutsCol =
+          await collectionCheckoutRef.where("user_id", isEqualTo: collectionUserRef.doc(userInfo.uid)).get();
+
+      if (checkoutsCol.docs.isEmpty) {
+        checkoutID = await _createNewCheckout(userID: userInfo.uid);
+      } else {
+        checkoutID = checkoutsCol.docs.first.id;
+      }
 
       var booksCol = await collectionCheckoutRef.doc(checkoutID).collection("books").get().then((value) => value.docs);
+
       booksCol.forEach((value) {
         DocumentReference book = value.data()["book_id"];
         booksID.add(book.id);
@@ -40,6 +51,18 @@ class CheckoutRepository {
       });
 
       return checkouts;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<String> _createNewCheckout({required String userID}) async {
+    try {
+      DocumentReference documentReferenceOrder = await collectionCheckoutRef.add({
+        "user_id": collectionUserRef.doc(userID),
+      });
+
+      return documentReferenceOrder.id;
     } catch (e) {
       throw e;
     }

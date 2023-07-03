@@ -3,8 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:library_app/components/app_bar.dart';
+import 'package:library_app/components/empty_lottie.dart';
 import 'package:library_app/components/loading.dart';
-import 'package:lottie/lottie.dart';
 
 import '../bloc/Book/book_bloc.dart';
 import '../bloc/Checkout/checkout_bloc.dart';
@@ -165,20 +165,7 @@ class CheckoutPage extends StatelessWidget {
                 ),
               );
             } else {
-              return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Lottie.asset("assets/lottie/empty-cart.json"),
-                    const SizedBox(height: 20),
-                    const Text(
-                      "Keranjang Kosong...",
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                    ),
-                  ],
-                ),
-              );
+              return EmptyLottie(title: "Ups, keranjang kamu kosong..");
             }
           }
 

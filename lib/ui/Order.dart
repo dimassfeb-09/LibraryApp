@@ -33,7 +33,9 @@ class OrderPage extends StatelessWidget {
               child: BlocBuilder<OrderBloc, OrderState>(
                 bloc: context.watch<OrderBloc>(),
                 builder: (context, state) {
-                  print(state);
+                  if (state is AddOrderCheckoutsLoadingState) {
+                    return Center(child: loadingCircularProgressIndicator());
+                  }
                   return ListView.builder(
                     physics: const NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
@@ -73,36 +75,6 @@ class OrderPage extends StatelessWidget {
                 },
               ),
             ),
-            Container(
-              width: double.infinity,
-              margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 60),
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: const Color(0xFF27374D),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: const Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Keterangan Peminjaman Buku",
-                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Colors.white),
-                  ),
-                  SizedBox(height: 20),
-                  Text.rich(
-                    TextSpan(
-                      text: """1. Hanya dapat meminjam satu buku dengan judul yang sama
-2. Jadwal dan Lokasi pengambilan buku akan diinformasikan
-3. Jadwal dan Lokasi pengembalian buku akan diinformasikan
-4. Batas pengambilan buku h+3 setelah jadwal ditentukan
-5. Batas pengembalian buku h+3 setelah jadwal ditentukan
-                  """,
-                      style: TextStyle(color: Colors.white, fontSize: 12),
-                    ),
-                  ),
-                ],
-              ),
-            )
           ],
         ),
       ),

@@ -5,4 +5,8 @@ class UsersHelper {
   User? getCurrentUser() {
     return firebaseAuth.currentUser;
   }
+
+  FirebaseAuth firebaseAuthInstance() {
+    return firebaseAuth;
+  }
 }

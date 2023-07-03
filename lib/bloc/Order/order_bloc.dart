@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:library_app/models/Orders.dart';
 import 'package:library_app/repository/OrderRepository.dart';
 
 import '../../models/Books.dart';
@@ -12,6 +13,7 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
     on<AddOrderEvent>(_addOrderState);
     on<AddOrderCheckoutEvent>(_addOrderCheckoutEvent);
     on<AddOrderSubmittedEvent>(_addOrderSubmittedEvent);
+    on<GetOrderUserEvent>(_getOrderUserEvent);
   }
 
   void _addOrderState(AddOrderEvent event, Emitter emit) {
@@ -46,6 +48,18 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
       emit(AddOrderCheckoutsSuccessedState(books: event.books, errorMsg: ''));
     } catch (e) {
       emit(AddOrderCheckoutsFailedState(books: event.books, errorMsg: e.toString()));
+    }
+  }
+
+  void _getOrderUserEvent(GetOrderUserEvent event, Emitter emit) async {
+    try {
+      emit(GetOrderUserLoadingState());
+      OrderRepository orderRepository = OrderRepository();
+      Orders? userOrders = await orderRepository.getUserOrders();
+      emit(GetOrderUserSuccessedState().copyWith(orders: userOrders));
+    } catch (e) {
+      emit(GetOrderUserFailedState());
+      rethrow;
     }
   }
 }

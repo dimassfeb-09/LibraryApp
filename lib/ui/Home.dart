@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:library_app/components/app_bar.dart';
 import 'package:library_app/components/loading.dart';
-import 'package:library_app/ui/Checkout.dart';
 import 'package:library_app/ui/DetailBook.dart';
 import 'package:library_app/ui/Search.dart';
 
@@ -31,7 +30,7 @@ class HomePage extends StatelessWidget {
         centerTitle: true,
         leading: IconButton(
           onPressed: () => Navigator.of(context).pushNamed(
-            '/profile',
+            '/menu',
           ),
           icon: const Icon(Icons.menu_rounded),
         ),
@@ -92,14 +91,7 @@ class _IconButtonActionHome extends StatelessWidget {
           icon: const Icon(Icons.search),
         ),
         IconButton(
-          onPressed: () => Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) {
-              return BlocProvider(
-                create: (context) => CheckoutBloc()..add(GetCheckoutUserEvent(userID: currentUser?.uid)),
-                child: const CheckoutPage(),
-              );
-            },
-          )),
+          onPressed: () => Navigator.of(context).pushNamed('/checkouts'),
           icon: const Icon(Icons.shopping_cart),
         ),
       ],

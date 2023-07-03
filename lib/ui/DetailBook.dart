@@ -148,7 +148,7 @@ class DetailBookPage extends StatelessWidget {
                     builder: (context) {
                       BookBloc bookBloc = context.read<BookBloc>();
                       return ButtonCustom(
-                        title: "BORROW",
+                        title: "PINJAM SEKARANG",
                         width: 165,
                         height: 35,
                         onTap: () {
