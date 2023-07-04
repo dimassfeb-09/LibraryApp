@@ -1,9 +1,10 @@
-import 'package:card_loading/card_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:library_app/components/app_bar.dart';
+import 'package:library_app/components/loading.dart';
 import 'package:library_app/helpers/users.dart';
 import 'package:library_app/repository/AuthRepository.dart';
+import 'package:library_app/ui/Profile.dart';
 
 import '../bloc/User/users_bloc.dart';
 
@@ -24,50 +25,58 @@ class MenuPage extends StatelessWidget {
           Container(
             margin: const EdgeInsets.only(top: 30, left: 20, right: 20, bottom: 10),
             width: double.infinity,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    Container(
-                      height: 52,
-                      width: 52,
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFD9D9D9),
-                        borderRadius: BorderRadius.circular(100),
-                      ),
-                      child: const Center(
-                        child: Icon(Icons.person),
-                      ),
-                    ),
-                    BlocBuilder<UsersBloc, UsersState>(
-                      builder: (context, state) {
-                        if (state is GetDetailUserLoadingState) {
-                          return const CardLoading(
-                            margin: EdgeInsets.symmetric(horizontal: 15),
-                            borderRadius: BorderRadius.all(Radius.circular(5)),
-                            height: 20,
-                            width: 100,
-                          );
-                        }
+            child: BlocBuilder<UsersBloc, UsersState>(
+              builder: (context, state) {
+                if (state is GetDetailUserLoadingState) {
+                  return loadingCircularProgressIndicator();
+                }
 
-                        if (state is GetDetailUserSuccessedState) {
-                          return Container(
+                if (state is GetDetailUserSuccessedState) {
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          Container(
+                            height: 52,
+                            width: 52,
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFD9D9D9),
+                              borderRadius: BorderRadius.circular(100),
+                            ),
+                            child: const Center(
+                              child: Icon(Icons.person),
+                            ),
+                          ),
+                          Container(
                             margin: const EdgeInsets.symmetric(horizontal: 15),
                             child: Text(state.users!.name),
+                          ),
+                        ],
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          var usersBloc = context.read<UsersBloc>();
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => BlocProvider.value(
+                                value: usersBloc,
+                                child: const ProfilePage(),
+                              ),
+                            ),
                           );
-                        }
+                        },
+                        child: const Text(
+                          "Edit Profile",
+                          style: TextStyle(color: Color(0xFF0591F6), fontSize: 14),
+                        ),
+                      ),
+                    ],
+                  );
+                }
 
-                        return const SizedBox();
-                      },
-                    ),
-                  ],
-                ),
-                const Text(
-                  "Edit Profile",
-                  style: TextStyle(color: Color(0xFF0591F6), fontSize: 14),
-                ),
-              ],
+                return const SizedBox();
+              },
             ),
           ),
           Container(

@@ -90,10 +90,14 @@ class _IconButtonActionHome extends StatelessWidget {
           )),
           icon: const Icon(Icons.search),
         ),
-        IconButton(
-          onPressed: () => Navigator.of(context).pushNamed('/checkouts'),
-          icon: const Icon(Icons.shopping_cart),
-        ),
+        Builder(builder: (context) {
+          print(context.watch<CheckoutBloc>().state.checkouts.length);
+          return IconButton(
+            tooltip: "1",
+            onPressed: () => Navigator.of(context).pushNamed('/checkouts'),
+            icon: const Icon(Icons.shopping_cart),
+          );
+        }),
       ],
     );
   }

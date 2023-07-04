@@ -7,6 +7,7 @@ import 'package:library_app/bloc/Order/order_bloc.dart';
 import 'package:library_app/ui/Checkout.dart';
 import 'package:library_app/ui/Menu.dart';
 import 'package:library_app/ui/OrderHistory.dart';
+import 'package:library_app/ui/Profile.dart';
 
 import 'bloc/Book/book_bloc.dart';
 import 'bloc/Home/home_bloc.dart';
@@ -55,10 +56,12 @@ class MyApp extends StatelessWidget {
               create: (context) => UsersBloc()..add(GetDetailUserEvent()),
               child: const MenuPage(),
             ),
+        '/profile': (context) => ProfilePage(),
         '/home': (context) => MultiBlocProvider(
               providers: [
                 BlocProvider(create: (context) => HomeBloc()),
                 BlocProvider(create: (context) => BookBloc()..add(GetBooksHomeEvent())),
+                BlocProvider(create: (context) => CheckoutBloc()..add(GetCheckoutUserEvent())),
               ],
               child: HomePage(),
             ),
