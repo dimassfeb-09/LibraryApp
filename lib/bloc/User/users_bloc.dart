@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:library_app/repository/UserRepository.dart';
 import 'package:meta/meta.dart';
 
@@ -14,9 +15,26 @@ class UsersBloc extends Bloc<UsersEvent, UsersState> {
         emit(GetDetailUserLoadingState());
         UserRepository userRepository = UserRepository();
         Users user = await userRepository.getDetailInfoUser();
-        emit(GetDetailUserSuccessedState().copyWith(user));
+        emit(GetDetailUserSuccessedState().copyWith(users: user));
       } catch (e) {
         throw e.toString();
+      }
+    });
+
+    on<ChangeEmailEvent>((event, emit) {
+      emit(state.copyWith(email: event.email));
+    });
+
+    on<ChangeEmailSubmittedEvent>((event, emit) async {
+      try {
+        emit(ChangeEmailSubmittedLoadingState());
+
+        UserRepository userRepository = UserRepository();
+        await userRepository.changeEmailUser(state.email);
+
+        emit(ChangeEmailSubmittedSuccessedState());
+      } catch (e) {
+        emit(ChangeEmailSubmittedFailedState());
       }
     });
   }

@@ -50,7 +50,19 @@ class MenuPage extends StatelessWidget {
                           ),
                           Container(
                             margin: const EdgeInsets.symmetric(horizontal: 15),
-                            child: Text(state.users!.name),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  state.users!.name,
+                                  style: const TextStyle(fontWeight: FontWeight.w600),
+                                ),
+                                Text(
+                                  state.users!.email,
+                                  style: const TextStyle(color: Colors.grey, fontSize: 12),
+                                ),
+                              ],
+                            ),
                           ),
                         ],
                       ),
