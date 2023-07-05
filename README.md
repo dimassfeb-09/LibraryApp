@@ -43,8 +43,7 @@ Components Folder
 
 - The Components folder is used to create a reusable widget that can later be used from multiple pages
 
-```
-dart
+```dart
 Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
