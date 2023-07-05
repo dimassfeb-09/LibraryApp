@@ -31,26 +31,32 @@ class RegisterPage extends StatelessWidget {
                 ),
                 const ImageCustom(),
                 TextFieldCustom(
-                  controller: TextEditingController(text: registerBloc.state.name),
+                  controller:
+                      TextEditingController(text: registerBloc.state.name),
                   title: "Nama",
                   hintText: "Masukkan nama anda",
-                  onChanged: (value) => context.read<RegisterBloc>()..add(NameEvent(name: value)),
+                  onChanged: (value) =>
+                      context.read<RegisterBloc>()..add(NameEvent(name: value)),
                 ),
                 const SizedBox(height: 20),
                 TextFieldCustom(
-                  controller: TextEditingController(text: registerBloc.state.email),
+                  controller:
+                      TextEditingController(text: registerBloc.state.email),
                   title: "Email",
                   hintText: "Masukkan email anda",
-                  onChanged: (value) => context.read<RegisterBloc>()..add(EmailEvent(email: value)),
+                  onChanged: (value) => context.read<RegisterBloc>()
+                    ..add(EmailEvent(email: value)),
                 ),
                 const SizedBox(height: 20),
                 TextFieldCustom(
-                  controller: TextEditingController(text: registerBloc.state.password),
+                  controller:
+                      TextEditingController(text: registerBloc.state.password),
                   title: "Password",
                   hintText: "Masukkan password anda",
                   secureText: true,
                   type: InputType.password,
-                  onChanged: (value) => context.read<RegisterBloc>()..add(PasswordEvent(password: value)),
+                  onChanged: (value) => context.read<RegisterBloc>()
+                    ..add(PasswordEvent(password: value)),
                 ),
                 const SizedBox(height: 25),
                 BlocListener<RegisterBloc, RegisterState>(

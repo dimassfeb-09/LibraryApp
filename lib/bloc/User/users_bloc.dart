@@ -27,14 +27,33 @@ class UsersBloc extends Bloc<UsersEvent, UsersState> {
 
     on<ChangeEmailSubmittedEvent>((event, emit) async {
       try {
+        String email = state.email;
         emit(ChangeEmailSubmittedLoadingState());
 
         UserRepository userRepository = UserRepository();
-        await userRepository.changeEmailUser(state.email);
+        await userRepository.changeEmailUser(email);
 
         emit(ChangeEmailSubmittedSuccessedState());
       } catch (e) {
-        emit(ChangeEmailSubmittedFailedState());
+        emit(ChangeEmailSubmittedFailedState(errorMsg: e.toString()));
+      }
+    });
+
+    on<ChangePasswordEvent>((event, emit) {
+      emit(state.copyWith(password: event.password));
+    });
+
+    on<ChangePasswordSubmittedEvent>((event, emit) async {
+      try {
+        String password = state.password;
+        emit(ChangePasswordSubmittedLoadingState());
+
+        UserRepository userRepository = UserRepository();
+        await userRepository.changePasswordUser(password);
+
+        emit(ChangePasswordSubmittedSuccessedState());
+      } catch (e) {
+        emit(ChangePasswordSubmittedFailedState(errorMsg: e.toString()));
       }
     });
   }

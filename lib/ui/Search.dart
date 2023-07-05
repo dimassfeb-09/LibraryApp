@@ -29,9 +29,9 @@ class SearchPage extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
               child: TextFieldCustom(
+                controller: TextEditingController(text: ''),
                 hintText: "Cari buku berdasarkan judul, penulis dan penerbit",
                 onChanged: (value) {},
-                controller: TextEditingController(),
               ),
             ),
             Padding(
@@ -62,14 +62,17 @@ class SearchPage extends StatelessWidget {
                                   builder: (context) => MultiBlocProvider(
                                     providers: [
                                       BlocProvider(
-                                        create: (context) =>
-                                            BookBloc()..add(GetDetailBookEvent(id: state.trendBooks[index].id)),
+                                        create: (context) => BookBloc()
+                                          ..add(GetDetailBookEvent(
+                                              id: state.trendBooks[index].id)),
                                       ),
                                       BlocProvider(
                                         create: (context) => CheckoutBloc()
                                           ..add(GetCheckoutBookByUserIDEvent(
-                                              userID: firebaseAuth.currentUser!.uid,
-                                              bookID: state.trendBooks[index].id)),
+                                              userID:
+                                                  firebaseAuth.currentUser!.uid,
+                                              bookID:
+                                                  state.trendBooks[index].id)),
                                       ),
                                     ],
                                     child: DetailBookPage(),
@@ -88,14 +91,17 @@ class SearchPage extends StatelessWidget {
                                       decoration: BoxDecoration(
                                         color: Colors.grey,
                                         image: DecorationImage(
-                                          image: CachedNetworkImageProvider(state.trendBooks[index].imagePath),
+                                          image: CachedNetworkImageProvider(
+                                              state
+                                                  .trendBooks[index].imagePath),
                                           fit: BoxFit.cover,
                                         ),
                                         borderRadius: BorderRadius.circular(10),
                                         boxShadow: [
                                           BoxShadow(
                                             blurRadius: 10,
-                                            color: Colors.black.withOpacity(0.10),
+                                            color:
+                                                Colors.black.withOpacity(0.10),
                                             offset: const Offset(0, 1),
                                           ),
                                         ],
@@ -104,14 +110,19 @@ class SearchPage extends StatelessWidget {
                                     SizedBox(width: 12),
                                     Expanded(
                                       child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
                                           Text(
                                             state.trendBooks[index].title,
-                                            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                                            style: const TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w600),
                                             overflow: TextOverflow.clip,
                                           ),
-                                          Text(state.trendBooks[index].writer, style: const TextStyle(fontSize: 12)),
+                                          Text(state.trendBooks[index].writer,
+                                              style: const TextStyle(
+                                                  fontSize: 12)),
                                         ],
                                       ),
                                     )

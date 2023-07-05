@@ -23,7 +23,8 @@ class MenuPage extends StatelessWidget {
       body: Column(
         children: [
           Container(
-            margin: const EdgeInsets.only(top: 30, left: 20, right: 20, bottom: 10),
+            margin:
+                const EdgeInsets.only(top: 30, left: 20, right: 20, bottom: 10),
             width: double.infinity,
             child: BlocBuilder<UsersBloc, UsersState>(
               builder: (context, state) {
@@ -55,11 +56,13 @@ class MenuPage extends StatelessWidget {
                               children: [
                                 Text(
                                   state.users!.name,
-                                  style: const TextStyle(fontWeight: FontWeight.w600),
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.w600),
                                 ),
                                 Text(
                                   state.users!.email,
-                                  style: const TextStyle(color: Colors.grey, fontSize: 12),
+                                  style: const TextStyle(
+                                      color: Colors.grey, fontSize: 12),
                                 ),
                               ],
                             ),
@@ -80,7 +83,8 @@ class MenuPage extends StatelessWidget {
                         },
                         child: const Text(
                           "Edit Profile",
-                          style: TextStyle(color: Color(0xFF0591F6), fontSize: 14),
+                          style:
+                              TextStyle(color: Color(0xFF0591F6), fontSize: 14),
                         ),
                       ),
                     ],
@@ -102,7 +106,8 @@ class MenuPage extends StatelessWidget {
                 ),
                 const SizedBox(height: 20),
                 GestureDetector(
-                  onTap: () => Navigator.of(context).pushNamed('/history_orders'),
+                  onTap: () =>
+                      Navigator.of(context).pushNamed('/history_orders'),
                   child: Container(
                     color: Colors.transparent,
                     child: Row(
@@ -146,7 +151,8 @@ class MenuPage extends StatelessWidget {
                     AuthRepository authRepository = AuthRepository();
                     authRepository.logoutAuth();
 
-                    Navigator.of(context).pushNamedAndRemoveUntil('/login', (route) => false);
+                    Navigator.of(context)
+                        .pushNamedAndRemoveUntil('/login', (route) => false);
                   },
                   child: Container(
                     child: Row(

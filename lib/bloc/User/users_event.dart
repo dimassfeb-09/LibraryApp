@@ -7,9 +7,14 @@ class GetDetailUserEvent extends UsersEvent {}
 
 class ChangeEmailEvent extends UsersEvent {
   final String email;
-  ChangeEmailEvent(this.email);
+  ChangeEmailEvent({required this.email});
 }
 
 class ChangeEmailSubmittedEvent extends UsersEvent {}
 
-class ChangePasswordEvent extends UsersEvent {}
+class ChangePasswordEvent extends UsersEvent {
+  final String password;
+  ChangePasswordEvent({required this.password});
+}
+
+class ChangePasswordSubmittedEvent extends UsersEvent {}

@@ -32,7 +32,9 @@ class TextFieldCustom extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          title != '' ? Column(children: [Text(title), const SizedBox(height: 6)]) : const SizedBox(),
+          title != ''
+              ? Column(children: [Text(title), const SizedBox(height: 6)])
+              : const SizedBox(),
           TextField(
             controller: controller,
             onChanged: onChanged,
@@ -44,7 +46,8 @@ class TextFieldCustom extends StatelessWidget {
                 borderRadius: BorderRadius.circular(5),
                 borderSide: const BorderSide(color: Colors.black),
               ),
-              contentPadding: const EdgeInsets.only(top: 13, bottom: 13, left: 10),
+              contentPadding:
+                  const EdgeInsets.only(top: 13, bottom: 13, left: 10),
             ),
           ),
         ],

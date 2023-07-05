@@ -33,20 +33,24 @@ class LoginPage extends StatelessWidget {
                 const ImageCustom(),
                 const SizedBox(height: 30),
                 TextFieldCustom(
-                  controller: TextEditingController(text: loginBloc.state.email),
+                  controller:
+                      TextEditingController(text: loginBloc.state.email),
                   title: "Email",
                   hintText: "Masukkan email anda",
-                  onChanged: (value) => loginBloc..add(EmailLoginEvent(email: value)),
+                  onChanged: (value) =>
+                      loginBloc..add(EmailLoginEvent(email: value)),
                   type: InputType.email,
                 ),
                 const SizedBox(height: 20),
                 TextFieldCustom(
-                  controller: TextEditingController(text: loginBloc.state.password),
+                  controller:
+                      TextEditingController(text: loginBloc.state.password),
                   title: "Kata Sandi",
                   hintText: "Masukkan kata sandi anda",
                   secureText: true,
                   type: InputType.password,
-                  onChanged: (value) => loginBloc..add(PasswordLoginEvent(password: value)),
+                  onChanged: (value) =>
+                      loginBloc..add(PasswordLoginEvent(password: value)),
                 ),
                 const SizedBox(height: 25),
                 BlocListener<LoginBloc, LoginState>(

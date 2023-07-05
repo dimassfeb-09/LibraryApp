@@ -36,7 +36,8 @@ class ProfilePage extends StatelessWidget {
                   const SizedBox(height: 20),
                   Text(
                     state.users!.name,
-                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                    style: const TextStyle(
+                        fontSize: 18, fontWeight: FontWeight.w600),
                   ),
                   Text(
                     state.users!.email,
@@ -45,39 +46,37 @@ class ProfilePage extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 30),
+              const Text("Settings", textAlign: TextAlign.end),
+              Container(
+                width: double.infinity,
+                margin: const EdgeInsets.symmetric(horizontal: 20),
+                child: const Divider(),
+              ),
               GestureDetector(
-                onTap: () => Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => const UpdateEmailPage(),
+                onTap: () => Navigator.of(context).pushNamed('/edit_email'),
+                child: Container(
+                  width: double.infinity,
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                  margin: const EdgeInsets.symmetric(horizontal: 20),
+                  child: const Text(
+                    "Ubah Email",
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                 ),
+              ),
+              const SizedBox(height: 10),
+              GestureDetector(
+                onTap: () => Navigator.of(context).pushNamed('/edit_password'),
                 child: Container(
                   width: double.infinity,
                   padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                   margin: const EdgeInsets.symmetric(horizontal: 20),
-                  decoration: BoxDecoration(
-                    color: Colors.grey[50],
-                    borderRadius: BorderRadius.circular(5),
-                    border: Border.all(
-                      color: Colors.grey.withOpacity(0.5),
-                    ),
-                  ),
-                  child: Text("Ubah Email"),
-                ),
-              ),
-              const SizedBox(height: 20),
-              Container(
-                width: double.infinity,
-                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                margin: const EdgeInsets.symmetric(horizontal: 20),
-                decoration: BoxDecoration(
-                  color: Colors.grey[50],
-                  borderRadius: BorderRadius.circular(5),
-                  border: Border.all(
-                    color: Colors.grey.withOpacity(0.5),
+                  child: const Text(
+                    "Ubah Kata Sandi",
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                 ),
-                child: Text("Ubah Kata Sandi"),
               ),
             ],
           );

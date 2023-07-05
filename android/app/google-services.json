@@ -118,7 +118,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:601423066247:android:bf421de214e0fac0d77422",
         "android_client_info": {
-          "package_name": "com.example.library_app"
+          "package_name": "com.superapp.library_app"
         }
       },
       "oauth_client": [

@@ -1,13 +1,17 @@
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:library_app/bloc/Checkout/checkout_bloc.dart';
 import 'package:library_app/bloc/Order/order_bloc.dart';
+import 'package:library_app/route/routes.dart';
 import 'package:library_app/ui/Checkout.dart';
 import 'package:library_app/ui/Menu.dart';
 import 'package:library_app/ui/OrderHistory.dart';
 import 'package:library_app/ui/Profile.dart';
+import 'package:library_app/ui/UpdateEmail.dart';
+import 'package:library_app/ui/UpdatePassword.dart';
 
 import 'bloc/Book/book_bloc.dart';
 import 'bloc/Home/home_bloc.dart';
@@ -26,6 +30,11 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  await Future.delayed(const Duration(seconds: 1), () {
+    FlutterNativeSplash.remove();
+  });
+
   runApp(const MyApp());
 }
 
@@ -46,39 +55,10 @@ class MyApp extends StatelessWidget {
         ),
         useMaterial3: true,
       ),
-      routes: {
-        '/login': (context) => BlocProvider(
-              create: (context) => LoginBloc(),
-              child: const LoginPage(),
-            ),
-        '/register': (context) => const RegisterPage(),
-        '/menu': (context) => BlocProvider(
-              create: (context) => UsersBloc()..add(GetDetailUserEvent()),
-              child: const MenuPage(),
-            ),
-        '/profile': (context) => ProfilePage(),
-        '/home': (context) => MultiBlocProvider(
-              providers: [
-                BlocProvider(create: (context) => HomeBloc()),
-                BlocProvider(create: (context) => BookBloc()..add(GetBooksHomeEvent())),
-                BlocProvider(create: (context) => CheckoutBloc()..add(GetCheckoutUserEvent())),
-              ],
-              child: HomePage(),
-            ),
-        '/search': (context) => const SearchPage(),
-        '/detail_book': (context) => DetailBookPage(),
-        '/forgotpassword': (context) => const ForgotPasswordPage(),
-        '/checkouts': (context) => BlocProvider(
-              create: (context) => CheckoutBloc()..add(GetCheckoutUserEvent()),
-              child: CheckoutPage(),
-            ),
-        '/history_orders': (context) => BlocProvider(
-              create: (context) => OrderBloc()..add(GetOrderUserEvent()),
-              child: const HistoryOrderPage(),
-            ),
-      },
+      debugShowCheckedModeBanner: false,
+      routes: routes(context),
       initialRoute: firebaseAuth.currentUser != null ? '/home' : '/login',
-      // initialRoute: '/home',
+      // initialRoute: '/edit_email',
     );
   }
 }
