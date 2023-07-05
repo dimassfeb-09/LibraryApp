@@ -6,6 +6,11 @@ eLinLend is an application that allows you to borrow books online from various l
 
 <img src="https://i.ibb.co/dbWwT0k/Desain-tanpa-judul.png">
 
+## Download Application
+
+- Github (Available) - <a href="./downloads/">go to Download here</a>
+- Playstore (Upcoming) - https://play.google.com/store/apps/details?id=com.superapp.library_app
+
 ## Structure Project
 
 ```
@@ -17,7 +22,7 @@ eLinLend is an application that allows you to borrow books online from various l
 --- repository
 --- route
 --- ui
-- main.dart
+--- main.dart
 ```
 
 Bloc Folder
@@ -32,14 +37,14 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     on<PasswordLoginEvent>(_passwordEvent);
   }
 }
-
 ```
 
 Components Folder
 
 - The Components folder is used to create a reusable widget that can later be used from multiple pages
 
-```dart
+```
+dart
 Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
