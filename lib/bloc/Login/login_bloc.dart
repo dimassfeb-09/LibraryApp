@@ -14,7 +14,10 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   void _submitLogInClicked(SubmittedLogInEvent event, Emitter<LoginState> emit) async {
     AuthRepository authRepository = AuthRepository();
     try {
-      await authRepository.LoginAuth(email: state.email, password: state.password);
+      String _email = state.email;
+      String _password = state.password;
+      emit(LoginLoading());
+      await authRepository.LoginAuth(email: _email, password: _password);
       return emit(LoginSuccessed());
     } catch (e) {
       emit(state.copyWith(email: '', password: ''));

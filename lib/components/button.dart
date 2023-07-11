@@ -37,7 +37,7 @@ class ButtonCustom extends StatelessWidget {
         child: title != ''
             ? Text(
                 title,
-                style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: fontTextColor),
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: fontTextColor),
               )
             : Icon(
                 icons,

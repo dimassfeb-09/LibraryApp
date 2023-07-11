@@ -144,7 +144,6 @@ class CheckoutPage extends StatelessWidget {
                                       Builder(builder: (context) {
                                         return GestureDetector(
                                           onTap: () {
-                                            print(context.read<CheckoutBloc>().state.checkouts[index].id);
                                             context.read<CheckoutBloc>().add(DeleteCheckoutEvent(
                                                 checkoutID: state.checkouts[index].id,
                                                 bookID: state.checkouts[index].book!.id));

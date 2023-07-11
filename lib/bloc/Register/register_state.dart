@@ -18,9 +18,11 @@ class RegisterState {
   }
 }
 
-class RegisterSuccessed extends RegisterState {}
+class RegisterLoadingState extends RegisterState {}
 
-class RegisterFailed extends RegisterState {
+class RegisterSuccessedState extends RegisterState {}
+
+class RegisterFailedState extends RegisterState {
   final String errorMsg;
-  RegisterFailed({required this.errorMsg}) : super(errorMsg: errorMsg);
+  RegisterFailedState({required this.errorMsg}) : super(errorMsg: errorMsg);
 }

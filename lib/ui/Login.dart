@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:library_app/components/button.dart';
 import 'package:library_app/components/image.dart';
+import 'package:library_app/components/loading.dart';
 import 'package:library_app/components/text_field.dart';
 
 import '../bloc/Login/login_bloc.dart';
@@ -33,50 +34,98 @@ class LoginPage extends StatelessWidget {
                 const ImageCustom(),
                 const SizedBox(height: 30),
                 TextFieldCustom(
-                  controller:
-                      TextEditingController(text: loginBloc.state.email),
+                  controller: TextEditingController(text: loginBloc.state.email),
                   title: "Email",
                   hintText: "Masukkan email anda",
-                  onChanged: (value) =>
-                      loginBloc..add(EmailLoginEvent(email: value)),
+                  onChanged: (value) => loginBloc..add(EmailLoginEvent(email: value)),
                   type: InputType.email,
                 ),
                 const SizedBox(height: 20),
                 TextFieldCustom(
-                  controller:
-                      TextEditingController(text: loginBloc.state.password),
+                  controller: TextEditingController(text: loginBloc.state.password),
                   title: "Kata Sandi",
                   hintText: "Masukkan kata sandi anda",
                   secureText: true,
                   type: InputType.password,
-                  onChanged: (value) =>
-                      loginBloc..add(PasswordLoginEvent(password: value)),
+                  onChanged: (value) => loginBloc..add(PasswordLoginEvent(password: value)),
                 ),
                 const SizedBox(height: 25),
-                BlocListener<LoginBloc, LoginState>(
+                // BlocListener<LoginBloc, LoginState>(
+                //   listener: (context, state) {
+                //     if (state is LoginSuccessed) {
+                //       Navigator.pushNamedAndRemoveUntil(
+                //         context,
+                //         '/home',
+                //         (route) => false,
+                //       );
+                //     } else if (state is LoginFailed) {
+                //       showDialog(
+                //         context: context,
+                //         builder: (context) => AlertDialog(
+                //           title: const Text("Failed to login."),
+                //           content: Text(state.errorMsg),
+                //         ),
+                //       );
+                //     }
+                //   },
+                //   child: ButtonCustom(
+                //     height: 48,
+                //     title: "Masuk",
+                //     onTap: () {
+                //       loginBloc.add(SubmittedLogInEvent());
+                //     },
+                //   ),
+                // ),
+                BlocConsumer<LoginBloc, LoginState>(
+                  bloc: loginBloc,
                   listener: (context, state) {
+                    if (state is LoginLoading) {
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Sedang proses...")));
+                    }
+
                     if (state is LoginSuccessed) {
+                      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Berhasil masuk...")));
                       Navigator.pushNamedAndRemoveUntil(
                         context,
                         '/home',
                         (route) => false,
                       );
-                    } else if (state is LoginFailed) {
+                    }
+
+                    if (state is LoginFailed) {
+                      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+
                       showDialog(
                         context: context,
                         builder: (context) => AlertDialog(
-                          title: const Text("Failed to login."),
+                          title: const Text("Gagal masuk."),
                           content: Text(state.errorMsg),
                         ),
                       );
                     }
                   },
-                  child: ButtonCustom(
-                    title: "Masuk",
-                    onTap: () {
-                      loginBloc.add(SubmittedLogInEvent());
-                    },
-                  ),
+                  builder: (context, state) {
+                    if (state is LoginLoading) {
+                      return Container(
+                        height: 48,
+                        width: 98,
+                        decoration: BoxDecoration(
+                          color: Colors.grey[200],
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        child: Center(child: loadingCircularProgressIndicator()),
+                      );
+                    }
+
+                    return ButtonCustom(
+                      height: 48,
+                      title: "Masuk",
+                      onTap: () {
+                        loginBloc.add(SubmittedLogInEvent());
+                      },
+                    );
+                  },
                 ),
                 const SizedBox(height: 20),
                 Column(
@@ -94,7 +143,7 @@ class LoginPage extends StatelessWidget {
                       ),
                       child: const Text(
                         "Daftar",
-                        style: TextStyle(fontWeight: FontWeight.w600),
+                        style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
                       ),
                     ),
                   ],

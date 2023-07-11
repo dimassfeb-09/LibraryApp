@@ -91,7 +91,6 @@ class _IconButtonActionHome extends StatelessWidget {
           icon: const Icon(Icons.search),
         ),
         Builder(builder: (context) {
-          print(context.watch<CheckoutBloc>().state.checkouts.length);
           return IconButton(
             tooltip: "1",
             onPressed: () => Navigator.of(context).pushNamed('/checkouts'),

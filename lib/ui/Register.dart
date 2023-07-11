@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:library_app/components/button.dart';
+import 'package:library_app/components/loading.dart';
 import 'package:library_app/components/text_field.dart';
 import 'package:library_app/ui/Login.dart';
 
@@ -31,57 +32,74 @@ class RegisterPage extends StatelessWidget {
                 ),
                 const ImageCustom(),
                 TextFieldCustom(
-                  controller:
-                      TextEditingController(text: registerBloc.state.name),
+                  controller: TextEditingController(text: registerBloc.state.name),
                   title: "Nama",
                   hintText: "Masukkan nama anda",
-                  onChanged: (value) =>
-                      context.read<RegisterBloc>()..add(NameEvent(name: value)),
+                  onChanged: (value) => context.read<RegisterBloc>()..add(NameEvent(name: value)),
                 ),
                 const SizedBox(height: 20),
                 TextFieldCustom(
-                  controller:
-                      TextEditingController(text: registerBloc.state.email),
+                  controller: TextEditingController(text: registerBloc.state.email),
                   title: "Email",
                   hintText: "Masukkan email anda",
-                  onChanged: (value) => context.read<RegisterBloc>()
-                    ..add(EmailEvent(email: value)),
+                  onChanged: (value) => context.read<RegisterBloc>()..add(EmailEvent(email: value)),
                 ),
                 const SizedBox(height: 20),
                 TextFieldCustom(
-                  controller:
-                      TextEditingController(text: registerBloc.state.password),
+                  controller: TextEditingController(text: registerBloc.state.password),
                   title: "Password",
                   hintText: "Masukkan password anda",
                   secureText: true,
                   type: InputType.password,
-                  onChanged: (value) => context.read<RegisterBloc>()
-                    ..add(PasswordEvent(password: value)),
+                  onChanged: (value) => context.read<RegisterBloc>()..add(PasswordEvent(password: value)),
                 ),
                 const SizedBox(height: 25),
-                BlocListener<RegisterBloc, RegisterState>(
+                BlocConsumer<RegisterBloc, RegisterState>(
                   bloc: registerBloc,
                   listener: (context, state) {
-                    if (state is RegisterSuccessed) {
-                      Navigator.pop(
-                        context,
-                      );
-                    } else if (state is RegisterFailed) {
+                    if (state is RegisterLoadingState) {
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Sedang proses...")));
+                    }
+
+                    if (state is RegisterSuccessedState) {
+                      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Berhasil daftar...")));
+                      return Navigator.pop(context);
+                    }
+
+                    if (state is RegisterFailedState) {
+                      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+
                       showDialog(
                         context: context,
                         builder: (context) => AlertDialog(
-                          title: const Text("Failed to register."),
+                          title: const Text("Gagal daftar."),
                           content: Text(state.errorMsg),
                         ),
                       );
                     }
                   },
-                  child: ButtonCustom(
-                    title: "Register",
-                    onTap: () {
-                      registerBloc.add(SubmittedRegisterEvent());
-                    },
-                  ),
+                  builder: (context, state) {
+                    if (state is RegisterLoadingState) {
+                      return Container(
+                        height: 48,
+                        width: 98,
+                        decoration: BoxDecoration(
+                          color: Colors.grey[200],
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        child: Center(child: loadingCircularProgressIndicator()),
+                      );
+                    }
+
+                    return ButtonCustom(
+                      height: 48,
+                      title: "Daftar",
+                      onTap: () {
+                        registerBloc.add(SubmittedRegisterEvent());
+                      },
+                    );
+                  },
                 ),
                 const SizedBox(height: 20),
                 Column(
@@ -96,7 +114,7 @@ class RegisterPage extends StatelessWidget {
                       ),
                       child: const Text(
                         "Login",
-                        style: TextStyle(fontWeight: FontWeight.w600),
+                        style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
                       ),
                     ),
                   ],

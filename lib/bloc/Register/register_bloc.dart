@@ -22,10 +22,16 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
     on<SubmittedRegisterEvent>((event, emit) async {
       AuthRepository authRepository = AuthRepository();
       try {
-        await authRepository.RegisterAuth(name: state.name, email: state.email, password: state.password);
-        return emit(RegisterSuccessed());
+        String _name = state.name;
+        String _email = state.email;
+        String _password = state.password;
+        emit(RegisterLoadingState());
+
+        await authRepository.RegisterAuth(name: _name, email: _email, password: _password);
+
+        emit(RegisterSuccessedState());
       } catch (e) {
-        emit(RegisterFailed(errorMsg: e.toString()));
+        emit(RegisterFailedState(errorMsg: e.toString()));
       }
     });
   }
