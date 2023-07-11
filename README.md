@@ -37,7 +37,6 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     on<PasswordLoginEvent>(_passwordEvent);
   }
 }
-
 ```
 
 Components Folder
