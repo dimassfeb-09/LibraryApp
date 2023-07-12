@@ -3,6 +3,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:library_app/bloc/Favorite/favorite_bloc.dart';
 import 'package:library_app/components/app_bar.dart';
 import 'package:library_app/components/loading.dart';
 import 'package:library_app/ui/DetailBook.dart';
@@ -129,13 +130,12 @@ class _CardSliderRecommendation extends StatelessWidget {
                   MaterialPageRoute(
                     builder: (context) => MultiBlocProvider(
                       providers: [
-                        BlocProvider(
-                          create: (context) => BookBloc()..add(GetDetailBookEvent(id: book.id)),
-                        ),
+                        BlocProvider(create: (context) => BookBloc()..add(GetDetailBookEvent(id: book.id))),
                         BlocProvider(
                           create: (context) => CheckoutBloc()
                             ..add(GetCheckoutBookByUserIDEvent(userID: firebaseAuth.currentUser!.uid, bookID: book.id)),
                         ),
+                        BlocProvider(create: (context) => FavoriteBloc()..add(GetFavoriteByBookIDEvent(book.id)))
                       ],
                       child: DetailBookPage(),
                     ),
@@ -198,6 +198,9 @@ class _CardSliderTrends extends StatelessWidget {
                       ..add(GetCheckoutBookByUserIDEvent(
                           userID: firebaseAuth.currentUser!.uid, bookID: bookBloc.state.trendBooks[index].id)),
                   ),
+                  BlocProvider(
+                      create: (context) =>
+                          FavoriteBloc()..add(GetFavoriteByBookIDEvent(bookBloc.state.trendBooks[index].id)))
                 ],
                 child: DetailBookPage(),
               ),
@@ -252,6 +255,9 @@ class _CardSliderNewBooks extends StatelessWidget {
                       ..add(GetCheckoutBookByUserIDEvent(
                           userID: firebaseAuth.currentUser!.uid, bookID: bookBloc.state.newBooks[index].id)),
                   ),
+                  BlocProvider(
+                      create: (context) =>
+                          FavoriteBloc()..add(GetFavoriteByBookIDEvent(bookBloc.state.newBooks[index].id)))
                 ],
                 child: DetailBookPage(),
               ),

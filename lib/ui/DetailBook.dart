@@ -8,6 +8,7 @@ import 'package:library_app/components/loading.dart';
 
 import '../bloc/Book/book_bloc.dart';
 import '../bloc/Checkout/checkout_bloc.dart';
+import '../bloc/Favorite/favorite_bloc.dart';
 import '../components/app_bar.dart';
 import 'Order.dart';
 
@@ -33,6 +34,9 @@ class DetailBookPage extends StatelessWidget {
                 return AppBarTitleCustom(title: context.watch<BookBloc>().state.detailBook?.title ?? '');
               }),
               centerTitle: true,
+              actions: [
+                _ActionButtonFavoriteBook(),
+              ],
             ),
             body: SingleChildScrollView(
               padding: EdgeInsets.symmetric(vertical: 30),
@@ -79,11 +83,11 @@ class DetailBookPage extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      CardDetailInformationBook(title: 'Halaman', data: state.detailBook!.page.toString()),
+                      _CardDetailInformationBook(title: 'Halaman', data: state.detailBook!.page.toString()),
                       const SizedBox(width: 20),
-                      CardDetailInformationBook(title: 'Bahasa', data: state.detailBook!.language),
+                      _CardDetailInformationBook(title: 'Bahasa', data: state.detailBook!.language),
                       const SizedBox(width: 20),
-                      CardDetailInformationBook(title: 'Terbit', data: state.detailBook!.publish),
+                      _CardDetailInformationBook(title: 'Terbit', data: state.detailBook!.publish),
                     ],
                   ),
                   const SizedBox(height: 30),
@@ -215,7 +219,7 @@ class DetailBookPage extends StatelessWidget {
   }
 }
 
-Container CardDetailInformationBook({String title = '', required String data}) {
+Container _CardDetailInformationBook({String title = '', required String data}) {
   return Container(
     height: 58,
     width: 58,
@@ -241,4 +245,57 @@ Container CardDetailInformationBook({String title = '', required String data}) {
       ],
     ),
   );
+}
+
+class _ActionButtonFavoriteBook extends StatelessWidget {
+  const _ActionButtonFavoriteBook({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocConsumer<FavoriteBloc, FavoriteState>(
+      bloc: context.watch<FavoriteBloc>(),
+      listener: (context, favoriteState) {
+        if (favoriteState is AddFavoriteLoadingState || favoriteState is DeleteFavoriteLoadingState) {
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Loading...")));
+        }
+
+        if (favoriteState is AddFavoriteFailedState || favoriteState is DeleteFavoriteFailedState) {
+          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(favoriteState.errorMsg!)));
+        }
+
+        if (favoriteState is AddFavoriteSuccessedState) {
+          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Berhasil tambah ke favorite!")));
+        }
+
+        if (favoriteState is DeleteFavoriteSuccessedState) {
+          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Berhasil hapus favorite!")));
+          Future.delayed(const Duration(microseconds: 500), () => ScaffoldMessenger.of(context).hideCurrentSnackBar());
+        }
+      },
+      builder: (context, favoriteState) {
+        return GestureDetector(
+          onTap: () {
+            var bookState = context.read<BookBloc>().state;
+            if (favoriteState.isFavorite == false) {
+              context.read<FavoriteBloc>().add(AddFavoriteEvent(bookState.detailBook!.id));
+              return;
+            } else {
+              context.read<FavoriteBloc>().add(DeleteFavoriteEvent(bookState.detailBook!.id));
+              return;
+            }
+          },
+          child: Padding(
+            padding: const EdgeInsets.only(right: 20),
+            child: Icon(
+              Icons.favorite,
+              color: favoriteState.isFavorite ? Colors.red : Colors.grey[300],
+            ),
+          ),
+        );
+      },
+    );
+  }
 }
