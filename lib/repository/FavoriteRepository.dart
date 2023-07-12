@@ -1,15 +1,41 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:library_app/models/Books.dart';
 
 class FavoriteRepository {
   FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
 
-  Future<void> getAllFavoriteBooksByUserID({required String userID}) async {
+  Future<List<Books>?> getAllFavoriteBooksByUserID({required String userID}) async {
     try {
       var querySnapshot = await firebaseFirestore
           .collection("favorites")
           .where("user_id", isEqualTo: firebaseFirestore.collection("users").doc(userID))
           .get();
+
+      List<Books> books = [];
+      if (querySnapshot.docs.isNotEmpty) {
+        var favoriteBooks = await querySnapshot.docs.first.reference.collection("books").get();
+
+        for (var doc in favoriteBooks.docs) {
+          DocumentReference bookRef = doc.get("book_id");
+          var fieldBook = await bookRef.get();
+          var book = Books(
+            id: fieldBook.id,
+            title: fieldBook.get("title"),
+            writer: fieldBook.get("writer"),
+            imagePath: fieldBook.get("image"),
+            description: fieldBook.get("description"),
+            language: fieldBook.get("lang"),
+            publish: fieldBook.get("publish"),
+            page: fieldBook.get("total_page"),
+            stock: fieldBook.get("stock"),
+          );
+          books.add(book);
+        }
+      }
+
+      return books;
     } catch (e) {
+      print(e);
       rethrow;
     }
   }

@@ -3,6 +3,8 @@ part of 'favorite_bloc.dart';
 @immutable
 abstract class FavoriteEvent {}
 
+class GetAllFavoriteByUserIDEvent extends FavoriteEvent {}
+
 class GetFavoriteByBookIDEvent extends FavoriteEvent {
   final String bookID;
   GetFavoriteByBookIDEvent(this.bookID);

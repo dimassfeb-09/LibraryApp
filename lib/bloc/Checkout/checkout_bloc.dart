@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:library_app/models/Checkouts.dart';
 import 'package:meta/meta.dart';
 
+import '../../helpers/users.dart';
 import '../../models/Books.dart';
 import '../../repository/CheckoutRepository.dart';
 
@@ -9,6 +10,8 @@ part 'checkout_event.dart';
 part 'checkout_state.dart';
 
 class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
+  UsersHelper usersHelper = UsersHelper();
+
   CheckoutBloc() : super(CheckoutState()) {
     on<GetCheckoutUserEvent>((event, emit) async {
       emit(GetCheckoutUserLoadingState());
@@ -24,11 +27,17 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
     });
 
     on<GetCheckoutBookByUserIDEvent>((event, emit) async {
-      emit(GetCheckoutBookByUserIDLoadingState());
+      try {
+        var currentUser = usersHelper.getCurrentUser();
+        emit(GetCheckoutBookByUserIDLoadingState());
 
-      CheckoutRepository checkoutRepository = CheckoutRepository();
-      bool isCheckout = await checkoutRepository.getCheckoutBookByIDUser(bookID: event.bookID, userID: event.userID);
-      emit(GetCheckoutBookByUserIDSucessedState(isCheckout: isCheckout));
+        CheckoutRepository checkoutRepository = CheckoutRepository();
+        bool isCheckout =
+            await checkoutRepository.getCheckoutBookByIDUser(bookID: event.bookID, userID: currentUser!.uid);
+        emit(GetCheckoutBookByUserIDSucessedState(isCheckout: isCheckout));
+      } catch (e) {
+        print("error");
+      }
     });
 
     on<AddCheckoutEvent>((event, emit) async {

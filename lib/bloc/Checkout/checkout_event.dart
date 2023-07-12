@@ -10,8 +10,7 @@ class GetCheckoutUserEvent extends CheckoutEvent {
 
 class GetCheckoutBookByUserIDEvent extends CheckoutEvent {
   final String bookID;
-  final String userID;
-  GetCheckoutBookByUserIDEvent({required this.bookID, required this.userID});
+  GetCheckoutBookByUserIDEvent({required this.bookID});
 }
 
 class AddCheckoutEvent extends CheckoutEvent {

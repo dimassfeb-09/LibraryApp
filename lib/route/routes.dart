@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:library_app/ui/Favorite.dart';
 import 'package:library_app/ui/OrderHistoryDetail.dart';
 
 import '../bloc/Book/book_bloc.dart';
 import '../bloc/Checkout/checkout_bloc.dart';
+import '../bloc/Favorite/favorite_bloc.dart';
 import '../bloc/Home/home_bloc.dart';
 import '../bloc/Login/login_bloc.dart';
 import '../bloc/Order/order_bloc.dart';
@@ -44,16 +46,17 @@ Map<String, Widget Function(BuildContext)> routes(BuildContext context) {
     '/home': (context) => MultiBlocProvider(
           providers: [
             BlocProvider(create: (context) => HomeBloc()),
-            BlocProvider(
-                create: (context) => BookBloc()..add(GetBooksHomeEvent())),
-            BlocProvider(
-                create: (context) =>
-                    CheckoutBloc()..add(GetCheckoutUserEvent())),
+            BlocProvider(create: (context) => BookBloc()..add(GetBooksHomeEvent())),
+            BlocProvider(create: (context) => CheckoutBloc()..add(GetCheckoutUserEvent())),
           ],
           child: HomePage(),
         ),
     '/search': (context) => const SearchPage(),
     '/detail_book': (context) => DetailBookPage(),
+    '/favorite': (context) => BlocProvider(
+          create: (context) => FavoriteBloc()..add(GetAllFavoriteByUserIDEvent()),
+          child: FavoritePage(),
+        ),
     '/forgotpassword': (context) => const ForgotPasswordPage(),
     '/checkouts': (context) => BlocProvider(
           create: (context) => CheckoutBloc()..add(GetCheckoutUserEvent()),

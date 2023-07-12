@@ -132,8 +132,7 @@ class _CardSliderRecommendation extends StatelessWidget {
                       providers: [
                         BlocProvider(create: (context) => BookBloc()..add(GetDetailBookEvent(id: book.id))),
                         BlocProvider(
-                          create: (context) => CheckoutBloc()
-                            ..add(GetCheckoutBookByUserIDEvent(userID: firebaseAuth.currentUser!.uid, bookID: book.id)),
+                          create: (context) => CheckoutBloc()..add(GetCheckoutBookByUserIDEvent(bookID: book.id)),
                         ),
                         BlocProvider(create: (context) => FavoriteBloc()..add(GetFavoriteByBookIDEvent(book.id)))
                       ],
@@ -194,9 +193,8 @@ class _CardSliderTrends extends StatelessWidget {
                     create: (context) => BookBloc()..add(GetDetailBookEvent(id: bookBloc.state.trendBooks[index].id)),
                   ),
                   BlocProvider(
-                    create: (context) => CheckoutBloc()
-                      ..add(GetCheckoutBookByUserIDEvent(
-                          userID: firebaseAuth.currentUser!.uid, bookID: bookBloc.state.trendBooks[index].id)),
+                    create: (context) =>
+                        CheckoutBloc()..add(GetCheckoutBookByUserIDEvent(bookID: bookBloc.state.trendBooks[index].id)),
                   ),
                   BlocProvider(
                       create: (context) =>
@@ -251,9 +249,8 @@ class _CardSliderNewBooks extends StatelessWidget {
                     create: (context) => BookBloc()..add(GetDetailBookEvent(id: bookBloc.state.newBooks[index].id)),
                   ),
                   BlocProvider(
-                    create: (context) => CheckoutBloc()
-                      ..add(GetCheckoutBookByUserIDEvent(
-                          userID: firebaseAuth.currentUser!.uid, bookID: bookBloc.state.newBooks[index].id)),
+                    create: (context) =>
+                        CheckoutBloc()..add(GetCheckoutBookByUserIDEvent(bookID: bookBloc.state.newBooks[index].id)),
                   ),
                   BlocProvider(
                       create: (context) =>

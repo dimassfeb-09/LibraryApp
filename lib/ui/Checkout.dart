@@ -8,6 +8,7 @@ import 'package:library_app/components/loading.dart';
 
 import '../bloc/Book/book_bloc.dart';
 import '../bloc/Checkout/checkout_bloc.dart';
+import '../bloc/Favorite/favorite_bloc.dart';
 import '../bloc/Order/order_bloc.dart';
 import '../components/button.dart';
 import 'DetailBook.dart';
@@ -70,7 +71,7 @@ class CheckoutPage extends StatelessWidget {
                       itemCount: state.checkouts.length,
                       scrollDirection: Axis.vertical,
                       shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
+                      physics: const NeverScrollableScrollPhysics(),
                       itemBuilder: (context, index) {
                         return GestureDetector(
                           onTap: () {
@@ -85,10 +86,11 @@ class CheckoutPage extends StatelessWidget {
                                     ),
                                     BlocProvider(
                                       create: (context) => CheckoutBloc()
-                                        ..add(GetCheckoutBookByUserIDEvent(
-                                            userID: firebaseAuth.currentUser!.uid,
-                                            bookID: state.checkouts[index].book!.id)),
+                                        ..add(GetCheckoutBookByUserIDEvent(bookID: state.checkouts[index].book!.id)),
                                     ),
+                                    BlocProvider(
+                                        create: (context) => FavoriteBloc()
+                                          ..add(GetFavoriteByBookIDEvent(state.checkouts[index].book!.id)))
                                   ],
                                   child: DetailBookPage(),
                                 ),
