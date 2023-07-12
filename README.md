@@ -9,7 +9,7 @@ eLinLend is an application that allows you to borrow books online from various l
 ## Download Application
 
 - Github (Available) - <a href="./downloads/">go to Download here</a>
-- Playstore (Upcoming) - https://play.google.com/store/apps/details?id=com.superapp.library_app
+- Playstore (Available) - https://play.google.com/store/apps/details?id=com.superapp.library_app
 
 ## Structure Project
 
