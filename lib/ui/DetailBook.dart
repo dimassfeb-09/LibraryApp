@@ -12,6 +12,8 @@ import '../bloc/Favorite/favorite_bloc.dart';
 import '../components/app_bar.dart';
 import 'Order.dart';
 
+bool isFavoriteRemoved = false;
+
 class DetailBookPage extends StatelessWidget {
   DetailBookPage({super.key});
 
@@ -24,17 +26,21 @@ class DetailBookPage extends StatelessWidget {
       builder: (context, state) {
         if (state is GetDetailBookLoadingState) {
           return Scaffold(
-            appBar: AppBar(title: const AppBarTitleCustom(title: '')),
             body: loadingCircularProgressIndicator(),
           );
-        } else if (state is GetDetailBookSuccessedState) {
+        }
+
+        if (state is GetDetailBookSuccessedState) {
           return Scaffold(
             appBar: AppBar(
-              title: Builder(builder: (context) {
-                return AppBarTitleCustom(title: context.watch<BookBloc>().state.detailBook?.title ?? '');
-              }),
+              title: Builder(
+                builder: (context) {
+                  return AppBarTitleCustom(title: context.watch<BookBloc>().state.detailBook?.title ?? '');
+                },
+              ),
               centerTitle: true,
-              actions: [
+              leading: IconButton(onPressed: () => Navigator.of(context).pop(true), icon: const Icon(Icons.arrow_back)),
+              actions: const [
                 _ActionButtonFavoriteBook(),
               ],
             ),
@@ -213,6 +219,7 @@ class DetailBookPage extends StatelessWidget {
             ),
           );
         }
+
         return const SizedBox();
       },
     );
@@ -266,12 +273,33 @@ class _ActionButtonFavoriteBook extends StatelessWidget {
 
         if (favoriteState is AddFavoriteSuccessedState) {
           ScaffoldMessenger.of(context).hideCurrentSnackBar();
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Berhasil tambah ke favorite!")));
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const Text("Berhasil tambah ke favorite!"),
+                  GestureDetector(
+                    onTap: () => Navigator.of(context).pushNamed('/favorite'),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 2),
+                      decoration: BoxDecoration(border: Border.all(color: Colors.white, width: 2)),
+                      child: const Text("Lihat"),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+          return;
         }
 
         if (favoriteState is DeleteFavoriteSuccessedState) {
           ScaffoldMessenger.of(context).hideCurrentSnackBar();
+
           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Berhasil hapus favorite!")));
+
           Future.delayed(const Duration(microseconds: 500), () => ScaffoldMessenger.of(context).hideCurrentSnackBar());
         }
       },
