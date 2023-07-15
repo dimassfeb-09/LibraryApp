@@ -1,9 +1,9 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:library_app/bloc/Order/order_bloc.dart';
 import 'package:library_app/components/button.dart';
+import 'package:library_app/components/card_book.dart';
 import 'package:library_app/components/loading.dart';
 
 import '../bloc/Book/book_bloc.dart';
@@ -49,24 +49,7 @@ class DetailBookPage extends StatelessWidget {
               child: Column(
                 children: [
                   Center(
-                    child: Container(
-                      height: 300,
-                      width: 200,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        image: DecorationImage(
-                          image: CachedNetworkImageProvider(state.detailBook!.imagePath),
-                          fit: BoxFit.cover,
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            offset: Offset(1, 1),
-                            color: Colors.black.withOpacity(0.25),
-                            blurRadius: 2,
-                          )
-                        ],
-                      ),
-                    ),
+                    child: CardBook(imagePath: state.detailBook!.imagePath, border: BorderSize.medium),
                   ),
                   const SizedBox(height: 20),
                   Text(

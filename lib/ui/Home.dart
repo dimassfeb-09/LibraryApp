@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +10,7 @@ import 'package:library_app/ui/Search.dart';
 
 import '../bloc/Book/book_bloc.dart';
 import '../bloc/Checkout/checkout_bloc.dart';
+import '../components/card_book.dart';
 
 class HomePage extends StatelessWidget {
   HomePage({super.key});
@@ -30,9 +30,7 @@ class HomePage extends StatelessWidget {
         title: const AppBarTitleCustom(title: "Utama"),
         centerTitle: true,
         leading: IconButton(
-          onPressed: () => Navigator.of(context).pushNamed(
-            '/menu',
-          ),
+          onPressed: () => Navigator.of(context).pushNamed('/menu'),
           icon: const Icon(Icons.menu_rounded),
         ),
         actions: const [_IconButtonActionHome()],
@@ -58,7 +56,7 @@ class HomePage extends StatelessWidget {
                     child: Text("Buku baru", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
                   ),
                   _CardSliderNewBooks(),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                 ],
               ),
             );
@@ -75,9 +73,6 @@ class _IconButtonActionHome extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    FirebaseAuth firebaseAuth = FirebaseAuth.instance;
-    User? currentUser = firebaseAuth.currentUser;
-
     return Row(
       children: [
         IconButton(
@@ -89,11 +84,12 @@ class _IconButtonActionHome extends StatelessWidget {
               );
             },
           )),
+          tooltip: "Search",
           icon: const Icon(Icons.search),
         ),
         Builder(builder: (context) {
           return IconButton(
-            tooltip: "1",
+            tooltip: "Checkout",
             onPressed: () => Navigator.of(context).pushNamed('/checkouts'),
             icon: const Icon(Icons.shopping_cart),
           );
@@ -141,22 +137,7 @@ class _CardSliderRecommendation extends StatelessWidget {
                   ),
                 );
               },
-              child: Container(
-                height: 250,
-                width: 170,
-                decoration: BoxDecoration(
-                  image: DecorationImage(image: CachedNetworkImageProvider(book.imagePath), fit: BoxFit.cover),
-                  borderRadius: BorderRadius.circular(10),
-                  color: Colors.grey.withOpacity(0.25),
-                  boxShadow: [
-                    BoxShadow(
-                      offset: const Offset(0, 1),
-                      blurRadius: 10,
-                      color: Colors.grey.withOpacity(0.25),
-                    ),
-                  ],
-                ),
-              ),
+              child: CardBook(imagePath: book.imagePath, height: 250, width: 170, shadow: Shadow.medium),
             );
           }).toList(),
         ),
@@ -204,16 +185,13 @@ class _CardSliderTrends extends StatelessWidget {
               ),
             ),
           ),
-          child: Container(
-            margin: const EdgeInsets.symmetric(horizontal: 10),
+          child: CardBook(
+            imagePath: bookBloc.state.trendBooks[index].imagePath,
             height: 195,
             width: 132,
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                  image: CachedNetworkImageProvider(bookBloc.state.trendBooks[index].imagePath), fit: BoxFit.cover),
-              color: Colors.grey.withOpacity(0.25),
-              borderRadius: BorderRadius.circular(7.76),
-            ),
+            margin: const EdgeInsets.symmetric(horizontal: 10),
+            shadow: Shadow.none,
+            border: BorderSize.medium,
           ),
         ),
       ),
@@ -260,16 +238,13 @@ class _CardSliderNewBooks extends StatelessWidget {
               ),
             ),
           ),
-          child: Container(
-            margin: const EdgeInsets.symmetric(horizontal: 10),
+          child: CardBook(
+            imagePath: bookBloc.state.newBooks[index].imagePath,
             height: 195,
             width: 132,
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                  image: CachedNetworkImageProvider(bookBloc.state.newBooks[index].imagePath), fit: BoxFit.cover),
-              color: Colors.grey.withOpacity(0.25),
-              borderRadius: BorderRadius.circular(7.76),
-            ),
+            margin: const EdgeInsets.symmetric(horizontal: 10),
+            shadow: Shadow.none,
+            border: BorderSize.medium,
           ),
         ),
       ),
