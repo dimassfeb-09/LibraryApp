@@ -18,10 +18,7 @@ class SuccessOrderPage extends StatelessWidget {
               Lottie.asset("assets/lottie/order-success.json"),
               const Text(
                 "Berhasil Pinjam",
-                style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.white),
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, color: Colors.white),
               ),
               const SizedBox(height: 40),
               Center(
@@ -31,8 +28,7 @@ class SuccessOrderPage extends StatelessWidget {
                   fontTextColor: Colors.white,
                   width: 129,
                   onTap: () {
-                    Navigator.of(context)
-                        .pushNamedAndRemoveUntil('/home', (route) => false);
+                    Navigator.of(context).pushNamedAndRemoveUntil('/home', (route) => false);
                   },
                 ),
               ),

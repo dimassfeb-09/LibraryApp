@@ -1,10 +1,9 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:library_app/components/app_bar.dart';
+import 'package:library_app/components/card_book.dart';
 import 'package:library_app/components/loading.dart';
 import 'package:library_app/components/status_card.dart';
-import 'package:library_app/ui/OrderHistoryDetail.dart';
 
 import '../bloc/Order/order_bloc.dart';
 import '../components/empty_lottie.dart';
@@ -47,8 +46,7 @@ class HistoryOrderPage extends StatelessWidget {
                         },
                       ),
                       child: Container(
-                        margin:
-                            const EdgeInsets.only(top: 20, left: 20, right: 20),
+                        margin: const EdgeInsets.only(top: 20, left: 20, right: 20),
                         padding: const EdgeInsets.all(10),
                         width: 100,
                         decoration: BoxDecoration(
@@ -72,16 +70,11 @@ class HistoryOrderPage extends StatelessWidget {
                                     const Icon(Icons.book),
                                     const SizedBox(width: 10),
                                     Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        Text(
-                                            "TRXID-${invoices[index].trxID.toString().substring(76, 83)}"),
-                                        Text(invoices[index]
-                                            .created_at
-                                            .toString()),
+                                        Text("TRXID-${invoices[index].trxID.toString().substring(76, 83)}"),
+                                        Text(invoices[index].created_at.toString()),
                                       ],
                                     )
                                   ],
@@ -96,34 +89,20 @@ class HistoryOrderPage extends StatelessWidget {
                             Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Container(
+                                CardBook(
+                                  imagePath: invoices[index].books!.first.imagePath,
                                   height: 110,
                                   width: 80,
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                        width: 1,
-                                        color: Colors.black.withOpacity(0.1)),
-                                    borderRadius: BorderRadius.circular(3),
-                                    image: DecorationImage(
-                                      image: CachedNetworkImageProvider(
-                                          invoices[index]
-                                              .books!
-                                              .first
-                                              .imagePath),
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
+                                  radiusSize: 3,
+                                  border: BorderSize.medium,
                                 ),
                                 const SizedBox(width: 10),
-                                Expanded(
-                                    child: Text(
-                                        invoices[index].books!.first.title)),
+                                Expanded(child: Text(invoices[index].books!.first.title)),
                               ],
                             ),
                             Builder(
                               builder: (context) {
-                                int lengthListBookPerInvoice =
-                                    invoices[index].books!.length;
+                                int lengthListBookPerInvoice = invoices[index].books!.length;
                                 if (lengthListBookPerInvoice > 1) {
                                   return Center(
                                     child: Column(
@@ -133,8 +112,7 @@ class HistoryOrderPage extends StatelessWidget {
                                           "Dengan ${lengthListBookPerInvoice - 1} buku lainnya",
                                           style: const TextStyle(
                                             fontWeight: FontWeight.w500,
-                                            decoration:
-                                                TextDecoration.underline,
+                                            decoration: TextDecoration.underline,
                                           ),
                                         ),
                                       ],
