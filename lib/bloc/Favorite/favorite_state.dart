@@ -39,7 +39,14 @@ class GetAllFavoriteLoadingState extends FavoriteState {}
 
 class GetAllFavoriteSuccessedState extends FavoriteState {
   final List<Books>? books;
-  GetAllFavoriteSuccessedState(this.books) : super(books: books);
+  GetAllFavoriteSuccessedState({this.books}) : super(books: books);
+
+  GetAllFavoriteSuccessedState copyWith(
+      {String? bookID, DateTime? createdAt, String? errorMsg, bool? isFavorite, List<Books>? books}) {
+    return GetAllFavoriteSuccessedState(
+      books: super.books ?? books,
+    );
+  }
 }
 
 class GetAllFavoriteFailedState extends FavoriteState {

@@ -28,9 +28,11 @@ class FavoriteBloc extends Bloc<FavoriteEvent, FavoriteState> {
     on<GetAllFavoriteByUserIDEvent>((event, emit) async {
       try {
         emit(GetAllFavoriteLoadingState());
+
         var currentUser = usersHelper.getCurrentUser();
         var books = await favoriteRepository.getAllFavoriteBooksByUserID(userID: currentUser!.uid);
-        emit(GetAllFavoriteSuccessedState(books));
+
+        emit(GetAllFavoriteSuccessedState().copyWith(books: books));
       } catch (e) {
         emit(GetAllFavoriteFailedState(e.toString()));
       }
