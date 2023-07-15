@@ -50,32 +50,6 @@ class LoginPage extends StatelessWidget {
                   onChanged: (value) => loginBloc..add(PasswordLoginEvent(password: value)),
                 ),
                 const SizedBox(height: 25),
-                // BlocListener<LoginBloc, LoginState>(
-                //   listener: (context, state) {
-                //     if (state is LoginSuccessed) {
-                //       Navigator.pushNamedAndRemoveUntil(
-                //         context,
-                //         '/home',
-                //         (route) => false,
-                //       );
-                //     } else if (state is LoginFailed) {
-                //       showDialog(
-                //         context: context,
-                //         builder: (context) => AlertDialog(
-                //           title: const Text("Failed to login."),
-                //           content: Text(state.errorMsg),
-                //         ),
-                //       );
-                //     }
-                //   },
-                //   child: ButtonCustom(
-                //     height: 48,
-                //     title: "Masuk",
-                //     onTap: () {
-                //       loginBloc.add(SubmittedLogInEvent());
-                //     },
-                //   ),
-                // ),
                 BlocConsumer<LoginBloc, LoginState>(
                   bloc: loginBloc,
                   listener: (context, state) {
