@@ -85,12 +85,8 @@ class LoginPage extends StatelessWidget {
 
                     if (state is LoginSuccessed) {
                       ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                      Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
                       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Berhasil masuk...")));
-                      Navigator.pushNamedAndRemoveUntil(
-                        context,
-                        '/home',
-                        (route) => false,
-                      );
                     }
 
                     if (state is LoginFailed) {
