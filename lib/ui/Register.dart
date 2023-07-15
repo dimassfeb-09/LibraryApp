@@ -63,8 +63,8 @@ class RegisterPage extends StatelessWidget {
 
                     if (state is RegisterSuccessedState) {
                       ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                      Navigator.of(context).pushNamedAndRemoveUntil('/home', (route) => false);
                       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Berhasil daftar...")));
-                      return Navigator.pop(context);
                     }
 
                     if (state is RegisterFailedState) {
