@@ -161,6 +161,7 @@ class MenuPage extends StatelessWidget {
                     authRepository.logoutAuth();
 
                     Navigator.of(context).pushNamedAndRemoveUntil('/login', (route) => false);
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Berhasil keluar...")));
                   },
                   child: Container(
                     child: Row(
