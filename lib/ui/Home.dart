@@ -48,12 +48,16 @@ class HomePage extends StatelessWidget {
                   const _CardSliderRecommendation(),
                   const Padding(
                     padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                    child: Text("Sedang trend", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                    child: Text("Sedang trend",
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.w600)),
                   ),
                   _CardSliderTrends(),
                   const Padding(
                     padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                    child: Text("Buku baru", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                    child: Text("Buku baru",
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.w600)),
                   ),
                   _CardSliderNewBooks(),
                   const SizedBox(height: 20),
@@ -76,14 +80,7 @@ class _IconButtonActionHome extends StatelessWidget {
     return Row(
       children: [
         IconButton(
-          onPressed: () => Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) {
-              return BlocProvider(
-                create: (context) => BookBloc()..add(GetBooksHomeEvent()),
-                child: const SearchPage(),
-              );
-            },
-          )),
+          onPressed: () => Navigator.of(context).pushNamed('/search'),
           tooltip: "Search",
           icon: const Icon(Icons.search),
         ),
@@ -126,18 +123,28 @@ class _CardSliderRecommendation extends StatelessWidget {
                   MaterialPageRoute(
                     builder: (context) => MultiBlocProvider(
                       providers: [
-                        BlocProvider(create: (context) => BookBloc()..add(GetDetailBookEvent(id: book.id))),
                         BlocProvider(
-                          create: (context) => CheckoutBloc()..add(GetCheckoutBookByUserIDEvent(bookID: book.id)),
+                            create: (context) => BookBloc()
+                              ..add(GetDetailBookEvent(id: book.id))),
+                        BlocProvider(
+                          create: (context) => CheckoutBloc()
+                            ..add(
+                                GetCheckoutBookByUserIDEvent(bookID: book.id)),
                         ),
-                        BlocProvider(create: (context) => FavoriteBloc()..add(GetFavoriteByBookIDEvent(book.id)))
+                        BlocProvider(
+                            create: (context) => FavoriteBloc()
+                              ..add(GetFavoriteByBookIDEvent(book.id)))
                       ],
                       child: DetailBookPage(),
                     ),
                   ),
                 );
               },
-              child: CardBook(imagePath: book.imagePath, height: 250, width: 170, shadow: Shadow.medium),
+              child: CardBook(
+                  imagePath: book.imagePath,
+                  height: 250,
+                  width: 170,
+                  shadow: Shadow.medium),
             );
           }).toList(),
         ),
@@ -171,15 +178,19 @@ class _CardSliderTrends extends StatelessWidget {
               builder: (context) => MultiBlocProvider(
                 providers: [
                   BlocProvider(
-                    create: (context) => BookBloc()..add(GetDetailBookEvent(id: bookBloc.state.trendBooks[index].id)),
+                    create: (context) => BookBloc()
+                      ..add(GetDetailBookEvent(
+                          id: bookBloc.state.trendBooks[index].id)),
                   ),
                   BlocProvider(
-                    create: (context) =>
-                        CheckoutBloc()..add(GetCheckoutBookByUserIDEvent(bookID: bookBloc.state.trendBooks[index].id)),
+                    create: (context) => CheckoutBloc()
+                      ..add(GetCheckoutBookByUserIDEvent(
+                          bookID: bookBloc.state.trendBooks[index].id)),
                   ),
                   BlocProvider(
-                      create: (context) =>
-                          FavoriteBloc()..add(GetFavoriteByBookIDEvent(bookBloc.state.trendBooks[index].id)))
+                      create: (context) => FavoriteBloc()
+                        ..add(GetFavoriteByBookIDEvent(
+                            bookBloc.state.trendBooks[index].id)))
                 ],
                 child: DetailBookPage(),
               ),
@@ -224,15 +235,19 @@ class _CardSliderNewBooks extends StatelessWidget {
               builder: (context) => MultiBlocProvider(
                 providers: [
                   BlocProvider(
-                    create: (context) => BookBloc()..add(GetDetailBookEvent(id: bookBloc.state.newBooks[index].id)),
+                    create: (context) => BookBloc()
+                      ..add(GetDetailBookEvent(
+                          id: bookBloc.state.newBooks[index].id)),
                   ),
                   BlocProvider(
-                    create: (context) =>
-                        CheckoutBloc()..add(GetCheckoutBookByUserIDEvent(bookID: bookBloc.state.newBooks[index].id)),
+                    create: (context) => CheckoutBloc()
+                      ..add(GetCheckoutBookByUserIDEvent(
+                          bookID: bookBloc.state.newBooks[index].id)),
                   ),
                   BlocProvider(
-                      create: (context) =>
-                          FavoriteBloc()..add(GetFavoriteByBookIDEvent(bookBloc.state.newBooks[index].id)))
+                      create: (context) => FavoriteBloc()
+                        ..add(GetFavoriteByBookIDEvent(
+                            bookBloc.state.newBooks[index].id)))
                 ],
                 child: DetailBookPage(),
               ),

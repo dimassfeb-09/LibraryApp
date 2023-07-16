@@ -9,6 +9,7 @@ import '../bloc/Favorite/favorite_bloc.dart';
 import '../bloc/Home/home_bloc.dart';
 import '../bloc/Login/login_bloc.dart';
 import '../bloc/Order/order_bloc.dart';
+import '../bloc/Search/search_bloc.dart';
 import '../bloc/User/users_bloc.dart';
 import '../ui/Checkout.dart';
 import '../ui/DetailBook.dart';
@@ -46,15 +47,29 @@ Map<String, Widget Function(BuildContext)> routes(BuildContext context) {
     '/home': (context) => MultiBlocProvider(
           providers: [
             BlocProvider(create: (context) => HomeBloc()),
-            BlocProvider(create: (context) => BookBloc()..add(GetBooksHomeEvent())),
-            BlocProvider(create: (context) => CheckoutBloc()..add(GetCheckoutUserEvent())),
+            BlocProvider(
+                create: (context) => BookBloc()..add(GetBooksHomeEvent())),
+            BlocProvider(
+                create: (context) =>
+                    CheckoutBloc()..add(GetCheckoutUserEvent())),
           ],
           child: HomePage(),
         ),
-    '/search': (context) => const SearchPage(),
+    '/search': (context) => MultiBlocProvider(
+          providers: [
+            BlocProvider(
+              create: (context) => BookBloc()..add(GetBooksHomeEvent()),
+            ),
+            BlocProvider(
+              create: (context) => SearchBloc(),
+            )
+          ],
+          child: const SearchPage(),
+        ),
     '/detail_book': (context) => DetailBookPage(),
     '/favorite': (context) => BlocProvider(
-          create: (context) => FavoriteBloc()..add(GetAllFavoriteByUserIDEvent()),
+          create: (context) =>
+              FavoriteBloc()..add(GetAllFavoriteByUserIDEvent()),
           child: FavoritePage(),
         ),
     '/forgotpassword': (context) => const ForgotPasswordPage(),

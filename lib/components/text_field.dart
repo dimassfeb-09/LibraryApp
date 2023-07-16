@@ -9,6 +9,7 @@ class TextFieldCustom extends StatelessWidget {
   final InputType type;
   final TextEditingController controller;
   void Function(String value)? onChanged;
+  void Function(String value)? onSubmitted;
 
   Map<InputType, TextInputType> selectedType = {
     InputType.text: TextInputType.text,
@@ -20,10 +21,11 @@ class TextFieldCustom extends StatelessWidget {
     super.key,
     this.title = '',
     required this.hintText,
-    required this.onChanged,
     required this.controller,
     this.type = InputType.text,
     this.secureText = false,
+    this.onSubmitted,
+    this.onChanged,
   });
 
   @override
@@ -38,6 +40,7 @@ class TextFieldCustom extends StatelessWidget {
           TextField(
             controller: controller,
             onChanged: onChanged,
+            onSubmitted: onSubmitted,
             keyboardType: selectedType[type],
             obscureText: secureText,
             decoration: InputDecoration(
