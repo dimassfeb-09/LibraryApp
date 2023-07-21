@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:library_app/bloc/pages_cubit.dart';
 import 'package:library_app/ui/Favorite.dart';
 import 'package:library_app/ui/OrderHistoryDetail.dart';
 
@@ -52,6 +53,7 @@ Map<String, Widget Function(BuildContext)> routes(BuildContext context) {
             BlocProvider(
                 create: (context) =>
                     CheckoutBloc()..add(GetCheckoutUserEvent())),
+            BlocProvider(create: (context) => PagesCubit()),
           ],
           child: HomePage(),
         ),
@@ -62,7 +64,7 @@ Map<String, Widget Function(BuildContext)> routes(BuildContext context) {
             ),
             BlocProvider(
               create: (context) => SearchBloc(),
-            )
+            ),
           ],
           child: const SearchPage(),
         ),

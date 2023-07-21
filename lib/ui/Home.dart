@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -6,25 +8,19 @@ import 'package:library_app/bloc/Favorite/favorite_bloc.dart';
 import 'package:library_app/components/app_bar.dart';
 import 'package:library_app/components/loading.dart';
 import 'package:library_app/ui/DetailBook.dart';
+import 'package:library_app/ui/Favorite.dart';
 import 'package:library_app/ui/Search.dart';
 
 import '../bloc/Book/book_bloc.dart';
 import '../bloc/Checkout/checkout_bloc.dart';
+import '../bloc/Search/search_bloc.dart';
+import '../bloc/pages_cubit.dart';
 import '../components/card_book.dart';
 
-class HomePage extends StatelessWidget {
-  HomePage({super.key});
-
+class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
   @override
   Widget build(BuildContext context) {
-    FirebaseAuth firebaseAuth = FirebaseAuth.instance;
-
-    User? currentUser = firebaseAuth.currentUser;
-    if (currentUser == null) {
-      firebaseAuth.signOut();
-      Navigator.of(context).pushNamedAndRemoveUntil('/login', (route) => false);
-    }
-
     return Scaffold(
       appBar: AppBar(
         title: const AppBarTitleCustom(title: "Utama"),
@@ -49,15 +45,15 @@ class HomePage extends StatelessWidget {
                   const Padding(
                     padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
                     child: Text("Sedang trend",
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.w600)),
+                        style:
+                        TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
                   ),
                   _CardSliderTrends(),
                   const Padding(
                     padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
                     child: Text("Buku baru",
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.w600)),
+                        style:
+                        TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
                   ),
                   _CardSliderNewBooks(),
                   const SizedBox(height: 20),
@@ -69,6 +65,77 @@ class HomePage extends StatelessWidget {
         },
       ),
     );
+  }
+}
+
+class HomePage extends StatelessWidget {
+  HomePage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+    User? currentUser = firebaseAuth.currentUser;
+    if (currentUser == null) {
+      firebaseAuth.signOut();
+      Navigator.of(context).pushNamedAndRemoveUntil('/login', (route) => false);
+    }
+
+    return BlocBuilder<PagesCubit, int>(
+      builder: (context, state) {
+        return Scaffold(
+          body: _currentPage(context, state),
+          bottomNavigationBar: BottomNavigationBar(
+            items: const [
+              BottomNavigationBarItem(
+                icon: Icon(Icons.home_outlined),
+                label: "Utama",
+                tooltip: "Utama",
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.search),
+                label: "Cari Buku",
+                tooltip: "Cari Buku",
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.favorite),
+                label: "Favorite Kamu",
+                tooltip: "Favorite Kamu",
+              ),
+            ],
+            onTap: (int index) =>
+                context.read<PagesCubit>().setCurrentPage(index),
+            currentIndex: state,
+            selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold),
+            showUnselectedLabels: false,
+          ),
+        );
+      },
+    );
+  }
+}
+
+Widget _currentPage(BuildContext context, int index) {
+  switch (index) {
+    case 1:
+      return MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            create: (context) => BookBloc()..add(GetBooksHomeEvent()),
+          ),
+          BlocProvider(
+            create: (context) => SearchBloc(),
+          ),
+        ],
+        child: const SearchPage(),
+      );
+    case 2:
+      return BlocProvider(
+        create: (context) =>
+        FavoriteBloc()..add(GetAllFavoriteByUserIDEvent()),
+        child: FavoritePage(),
+      );
+    default:
+      return const HomeScreen();
   }
 }
 

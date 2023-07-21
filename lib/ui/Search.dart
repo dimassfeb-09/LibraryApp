@@ -1,5 +1,4 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:library_app/bloc/Book/book_bloc.dart';
@@ -10,6 +9,7 @@ import 'package:library_app/components/text_field.dart';
 import '../bloc/Checkout/checkout_bloc.dart';
 import '../bloc/Search/search_bloc.dart';
 import '../components/app_bar.dart';
+import '../components/empty_lottie.dart';
 import 'DetailBook.dart';
 
 class SearchPage extends StatelessWidget {
@@ -17,8 +17,6 @@ class SearchPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    FirebaseAuth firebaseAuth = FirebaseAuth.instance;
-
     return Scaffold(
       appBar: AppBar(
         title: const AppBarTitleCustom(title: "Cari"),
@@ -52,33 +50,23 @@ class SearchPage extends StatelessWidget {
 
                   if (state is SearchBookSuccessedState) {
                     if (state.books == null) {
-                      return const Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "Hasil Pencarian",
-                              style: TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.w600),
-                            ),
-                            SizedBox(height: 20),
-                            Center(
-                              child: Text(
-                                "Ups, pencarian tidak ditemukan.",
-                                style: TextStyle(fontWeight: FontWeight.bold),
+                      return Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child:Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                "Hasil Pencarian",
+                                style: TextStyle(
+                                    fontSize: 16, fontWeight: FontWeight.w600),
                               ),
-                            ),
-                          ],
-                        ),
+                              EmptyLottie(title: "Ups, buku yang kamu cari gak ada..", type: LottieType.NotFound,),
+                            ],
+                          )
                       );
                     } else {
-                      print(state.books?[0].id);
-                      print(state.books?[0].title);
-                      print(state.books?[0].description);
-
                       return Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 20),
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -151,7 +139,7 @@ class SearchPage extends StatelessWidget {
                                             ],
                                           ),
                                         ),
-                                        SizedBox(width: 12),
+                                        const SizedBox(width: 12),
                                         Expanded(
                                           child: Column(
                                             crossAxisAlignment:
@@ -184,7 +172,7 @@ class SearchPage extends StatelessWidget {
                   }
 
                   return Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 20),
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -270,7 +258,7 @@ class SearchPage extends StatelessWidget {
                                               ],
                                             ),
                                           ),
-                                          SizedBox(width: 12),
+                                          const SizedBox(width: 12),
                                           Expanded(
                                             child: Column(
                                               crossAxisAlignment:
