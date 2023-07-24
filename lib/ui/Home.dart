@@ -45,15 +45,15 @@ class HomeScreen extends StatelessWidget {
                   const Padding(
                     padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
                     child: Text("Sedang trend",
-                        style:
-                        TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.w600)),
                   ),
                   _CardSliderTrends(),
                   const Padding(
                     padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
                     child: Text("Buku baru",
-                        style:
-                        TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.w600)),
                   ),
                   _CardSliderNewBooks(),
                   const SizedBox(height: 20),
@@ -117,22 +117,11 @@ class HomePage extends StatelessWidget {
 Widget _currentPage(BuildContext context, int index) {
   switch (index) {
     case 1:
-      return MultiBlocProvider(
-        providers: [
-          BlocProvider(
-            create: (context) => BookBloc()..add(GetBooksHomeEvent()),
-          ),
-          BlocProvider(
-            create: (context) => SearchBloc(),
-          ),
-        ],
-        child: const SearchPage(),
-      );
+      return const SearchPage();
     case 2:
       return BlocProvider(
-        create: (context) =>
-        FavoriteBloc()..add(GetAllFavoriteByUserIDEvent()),
-        child: FavoritePage(),
+        create: (context) => FavoriteBloc()..add(GetAllFavoriteByUserIDEvent()),
+        child: const FavoritePage(),
       );
     default:
       return const HomeScreen();

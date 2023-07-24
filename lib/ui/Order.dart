@@ -26,7 +26,8 @@ class OrderPage extends StatelessWidget {
           children: [
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 20, vertical: 25),
-              child: Text("Buku yang dipinjam", style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
+              child: Text("Buku yang dipinjam",
+                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -55,14 +56,18 @@ class OrderPage extends StatelessWidget {
                               children: [
                                 Text(
                                   state.books[index].title,
-                                  style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 20),
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 20),
                                   maxLines: 1,
                                   overflow: TextOverflow.clip,
                                 ),
                                 Text(
                                   state.books[index].writer,
                                   style: TextStyle(
-                                      fontWeight: FontWeight.w500, color: Colors.black.withOpacity(0.5), fontSize: 12),
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.black.withOpacity(0.5),
+                                      fontSize: 12),
                                 ),
                               ],
                             ),
@@ -94,7 +99,8 @@ class OrderPage extends StatelessWidget {
             BlocListener<OrderBloc, OrderState>(
               listener: (context, state) {
                 if (state is AddOrderCheckoutsLoadingState) {
-                  loadingCircularProgressIndicator(title: "Sedang proses peminjaman..");
+                  loadingCircularProgressIndicator(
+                      title: "Sedang proses peminjaman..");
                 }
 
                 if (state is AddOrderCheckoutsSuccessedState) {

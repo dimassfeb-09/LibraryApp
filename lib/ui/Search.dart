@@ -45,7 +45,20 @@ class SearchPage extends StatelessWidget {
                 ),
                 Builder(builder: (context) {
                   if (state is SearchBookLoadingState) {
-                    return loadingCircularProgressIndicator();
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            "Hasil Pencarian",
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.w600),
+                          ),
+                          loadingCircularProgressIndicator(),
+                        ],
+                      ),
+                    );
                   }
 
                   if (state is SearchBookSuccessedState) {

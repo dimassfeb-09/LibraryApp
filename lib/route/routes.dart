@@ -47,6 +47,12 @@ Map<String, Widget Function(BuildContext)> routes(BuildContext context) {
         ),
     '/home': (context) => MultiBlocProvider(
           providers: [
+            BlocProvider(
+              create: (context) => BookBloc()..add(GetBooksHomeEvent()),
+            ),
+            BlocProvider(
+              create: (context) => SearchBloc(),
+            ),
             BlocProvider(create: (context) => HomeBloc()),
             BlocProvider(
                 create: (context) => BookBloc()..add(GetBooksHomeEvent())),
