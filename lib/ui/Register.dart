@@ -17,6 +17,7 @@ class RegisterPage extends StatelessWidget {
 
     RegisterBloc registerBloc = context.read<RegisterBloc>();
     return Scaffold(
+      appBar: AppBar(),
       body: SafeArea(
         child: SingleChildScrollView(
           scrollDirection: Axis.vertical,
@@ -24,52 +25,70 @@ class RegisterPage extends StatelessWidget {
             width: double.infinity,
             child: Stack(
               children: [
-                Positioned(left: -127, top: 550,child: Container(height: 517.33, width: 654.91,child: Image.asset("assets/img/Waves.png"))),
+                Positioned(
+                    left: -127,
+                    top: 550,
+                    child: Container(
+                        height: 517.33,
+                        width: 654.91,
+                        child: Image.asset("assets/img/Waves.png"))),
                 Container(
-                  padding: const EdgeInsets.only(top: 70, left: 50, right: 50),
+                  padding: const EdgeInsets.only(top: 20, left: 50, right: 50),
                   width: size.width,
                   height: size.height,
                   child: Column(
                     children: [
                       const Text(
                         "Daftar",
-                        style: TextStyle(fontSize: 36, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            fontSize: 36, fontWeight: FontWeight.bold),
                       ),
                       const ImageCustom(),
                       TextFieldCustom(
-                        controller: TextEditingController(text: registerBloc.state.name),
+                        controller: TextEditingController(
+                            text: registerBloc.state.name),
                         title: "Nama",
                         hintText: "Masukkan nama anda",
-                        onChanged: (value) => context.read<RegisterBloc>()..add(NameEvent(name: value)),
+                        onChanged: (value) => context.read<RegisterBloc>()
+                          ..add(NameEvent(name: value)),
                       ),
                       const SizedBox(height: 20),
                       TextFieldCustom(
-                        controller: TextEditingController(text: registerBloc.state.email),
+                        controller: TextEditingController(
+                            text: registerBloc.state.email),
                         title: "Email",
                         hintText: "Masukkan email anda",
-                        onChanged: (value) => context.read<RegisterBloc>()..add(EmailEvent(email: value)),
+                        onChanged: (value) => context.read<RegisterBloc>()
+                          ..add(EmailEvent(email: value)),
                       ),
                       const SizedBox(height: 20),
                       TextFieldCustom(
-                        controller: TextEditingController(text: registerBloc.state.password),
+                        controller: TextEditingController(
+                            text: registerBloc.state.password),
                         title: "Password",
                         hintText: "Masukkan password anda",
                         secureText: true,
                         type: InputType.password,
-                        onChanged: (value) => context.read<RegisterBloc>()..add(PasswordEvent(password: value)),
+                        onChanged: (value) => context.read<RegisterBloc>()
+                          ..add(PasswordEvent(password: value)),
                       ),
                       const SizedBox(height: 25),
                       BlocConsumer<RegisterBloc, RegisterState>(
                         bloc: registerBloc,
                         listener: (context, state) {
                           if (state is RegisterLoadingState) {
-                            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Sedang proses...")));
+                            ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                    content: Text("Sedang proses...")));
                           }
 
                           if (state is RegisterSuccessedState) {
                             ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                            Navigator.of(context).pushNamedAndRemoveUntil('/home', (route) => false);
-                            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Berhasil daftar...")));
+                            Navigator.of(context).pushNamedAndRemoveUntil(
+                                '/home', (route) => false);
+                            ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                    content: Text("Berhasil daftar...")));
                           }
 
                           if (state is RegisterFailedState) {
@@ -93,7 +112,8 @@ class RegisterPage extends StatelessWidget {
                                 color: Colors.grey[200],
                                 borderRadius: BorderRadius.circular(5),
                               ),
-                              child: Center(child: loadingCircularProgressIndicator()),
+                              child: Center(
+                                  child: loadingCircularProgressIndicator()),
                             );
                           }
 
@@ -119,7 +139,8 @@ class RegisterPage extends StatelessWidget {
                             ),
                             child: const Text(
                               "Login",
-                              style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w600, fontSize: 16),
                             ),
                           ),
                         ],
